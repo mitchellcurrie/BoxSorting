@@ -1,37 +1,41 @@
+using System.Collections;
 using UnityEngine;
 
 public class SearchForBoxesState : State
 {
-    public override void OnUpdate(float deltaTime)
+    [SerializeField] private float _searchesPerSecond = 4f;
+    private Coroutine _searchCoroutine;
+
+    public override void OnEnter()
     {
-        SearchForBoxes(); // TODO: Not every frame
+        _searchCoroutine = StartCoroutine(SearchForBoxes());
     }
     
-    private void SearchForBoxes()
+    public override void OnExit()
     {
-        // Look Right
-        if (Raycast(Vector2.right, out RaycastHit2D hitRight))
+        if (_searchCoroutine != null)
         {
-            _characterController.MoveTo(Vector2.right, hitRight.point);
-            _stateMachine.TryChangeState(StateEnum.WalkToBox);
-        }
-        
-        // Look Left
-        if (Raycast(Vector2.left, out RaycastHit2D hitLeft))
-        {
-            _characterController.MoveTo(Vector2.left,hitLeft.point);
-            _stateMachine.TryChangeState(StateEnum.WalkToBox);
+            StopAllCoroutines();
         }
     }
-
-    private bool Raycast(Vector2 direction, out RaycastHit2D hit)
+    
+    private IEnumerator SearchForBoxes()
     {
-        //hit = Vector2.zero;
-        //RaycastHit2D[] results = Array.Empty<RaycastHit2D>();
-        //ContactFilter2D contactFilter = new ContactFilter2D(); // TODO add parameters here?
-        //Physics2D.Raycast(_characterController.transform.position, Vector2.left, contactFilter, results);
-
-        hit = Physics2D.Raycast(transform.position, direction);//, Mathf.Infinity, 0);
-        return hit;
+        SearchForBoxes(Vector2.right);
+        yield return new WaitForSeconds(1 / _searchesPerSecond);
+        SearchForBoxes(Vector2.left);
+        yield return new WaitForSeconds(1 / _searchesPerSecond);
+        _searchCoroutine = StartCoroutine(SearchForBoxes());
+    }
+    
+    private void SearchForBoxes(Vector2 direction)
+    {
+        var hit = Physics2D.Raycast(transform.position, direction);
+        
+        if (hit)
+        {
+            _characterController.SetMoveTarget(direction, hit.point);
+            _stateMachine.TryChangeState(StateEnum.WalkToBox);
+        }
     }
 }

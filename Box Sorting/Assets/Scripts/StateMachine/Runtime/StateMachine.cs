@@ -29,14 +29,14 @@ public class StateMachine
         return null;
     }
 
-    public void TryChangeState(StateEnum stateEnum)
+    public bool TryChangeState(StateEnum stateEnum)
     {
         var newState = GetState(stateEnum);
         
         if (!newState)
         {
             Debug.LogError("State not valid");
-            return;
+            return false;
         }
 
         if (_currentState)
@@ -44,7 +44,7 @@ public class StateMachine
             if (!newState.CanEnter(_currentState))
             {
                 Debug.LogError("Cannot Enter " + newState.Name + " from " + _currentState); // TODO: Change to normal log or remove
-                return;
+                return false;
             }
             
             _currentState.OnExit();
@@ -54,6 +54,7 @@ public class StateMachine
 
         _currentState = newState;
         _currentState.OnEnter();
+        return true;
     }
 
     public void Update(float deltaTime)

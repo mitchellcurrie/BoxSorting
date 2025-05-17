@@ -8,8 +8,9 @@ public class CharacterController : MonoBehaviour
     private static readonly int WALK_ANIM_BOOL = Animator.StringToHash("Walk");
     private static readonly int HOLD_ANIM_BOOL = Animator.StringToHash("Hold");
 
-    [Header("Settings")]
-    [SerializeField] private float _movementSpeed;
+    [Header("Settings")] 
+    [SerializeField] private float _movementSpeed = 2;
+    [SerializeField] private Transform _heldObjectTransform;
     
     [Header("State Machine")]
     [SerializeField] private State _defaultState;
@@ -18,7 +19,9 @@ public class CharacterController : MonoBehaviour
     private StateMachine _stateMachine;
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
+    private Vector2 _targetDirection;
     private Vector2 _targetPosition;
+    private GameObject _collidedBox;
     private bool _holdingBox;
     private bool _moving;
 
@@ -26,6 +29,11 @@ public class CharacterController : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (!_heldObjectTransform)
+        {
+            Debug.LogError("Held Object Transform is not set");
+        }
         
         InitStateMachine();
     }
@@ -58,26 +66,40 @@ public class CharacterController : MonoBehaviour
             Time.deltaTime * _movementSpeed);
     }
 
-    public void MoveTo(Vector2 direction, Vector2 targetPosition)
+    public void SetMoveTarget(Vector2 targetDirection, Vector2 targetPosition)
     {
-        _spriteRenderer.flipX = direction == Vector2.left;
+        _targetDirection = targetDirection;
         _targetPosition = targetPosition;
+    }
+
+    public void MoveToTarget()
+    {
+        _spriteRenderer.flipX = _targetDirection == Vector2.left;
         _moving = true;
         _animator.SetBool(WALK_ANIM_BOOL, true);
     }
-
-    private void PickUpBox()
+    
+    public void StopMoving()
     {
-        if (_holdingBox)
+        _moving = false;
+        _animator.SetBool(WALK_ANIM_BOOL, false);
+    }
+
+    public void PickUpBox()
+    {
+        if (_holdingBox) // TODO: Do we need this?
         {
             return;
         }
+        
+        _collidedBox.transform.SetParent(_heldObjectTransform);
+        _collidedBox.transform.SetLocalPositionAndRotation(Vector3.zero, _collidedBox.transform.rotation);
         
         _animator.SetBool(HOLD_ANIM_BOOL, true);
         _holdingBox = true;
     }
     
-    private void DropBox()
+    public void ThrowBox()
     {
         if (!_holdingBox)
         {
@@ -91,9 +113,10 @@ public class CharacterController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Box"))
+        if (collision.CompareTag("Box") && !_holdingBox)
         {
-            
+            _collidedBox = collision.gameObject;
+            _stateMachine.TryChangeState(StateEnum.PickUpBox);
         }
     }
 }
