@@ -1232,10 +1232,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1470109704}
+  - component: {fileID: 1470109706}
   - component: {fileID: 1470109703}
   - component: {fileID: 1470109705}
   m_Layer: 0
-  m_Name: NPC
+  m_Name: NPC_Character
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1333,6 +1334,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1470109706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1470109702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30e7f0540f8010241b9ba6e31d9dcef3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _movementSpeed: 0
 --- !u!1 &1505311900
 GameObject:
   m_ObjectHideFlags: 0
