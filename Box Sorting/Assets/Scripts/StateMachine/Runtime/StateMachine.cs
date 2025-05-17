@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class StateMachine
 {
-    private Dictionary<StateEnum, State> _states = new();
+    private readonly Dictionary<StateEnum, State> _states = new();
+    private readonly CharacterController _characterController;
     private State _currentState;
-    private CharacterController _characterController;
 
     public StateMachine(CharacterController characterController)
     {
@@ -18,7 +18,7 @@ public class StateMachine
         _states.Add(state.Name, state);
     }
 
-    public State GetState(StateEnum key)
+    private State GetState(StateEnum key) //TODO: Do we need this method?
     {
         if (_states.TryGetValue(key, out var state))
         {
@@ -29,25 +29,35 @@ public class StateMachine
         return null;
     }
 
-    public void TryChangeState(State state)
+    public void TryChangeState(StateEnum stateEnum)
     {
-        // Check if you can change state
+        var newState = GetState(stateEnum);
         
-        if (_currentState != null)
+        if (!newState)
         {
+            Debug.LogError("State not valid");
+            return;
+        }
+
+        if (_currentState)
+        {
+            if (!newState.CanEnter(_currentState))
+            {
+                Debug.LogError("Cannot Enter " + newState.Name + " from " + _currentState); // TODO: Change to normal log or remove
+                return;
+            }
+            
             _currentState.OnExit();
         }
+        
+        Debug.Log("State changed to " + newState.Name + " from " + _currentState); // TODO: Remove
 
-        _currentState = state;
-
-        if (_currentState != null)
-        {
-            _currentState.OnEnter();
-        }
+        _currentState = newState;
+        _currentState.OnEnter();
     }
 
-    public void Update()
+    public void Update(float deltaTime)
     {
-        _currentState.OnUpdate(Time.deltaTime);
+        _currentState.OnUpdate(deltaTime);
     }
 }
