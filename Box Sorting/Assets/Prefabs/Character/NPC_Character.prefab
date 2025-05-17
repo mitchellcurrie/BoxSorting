@@ -50,7 +50,7 @@ GameObject:
   - component: {fileID: 2897155230374487551}
   - component: {fileID: 5763760734567058779}
   - component: {fileID: 4329821967717833027}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: NPC_Character
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,9 +85,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30e7f0540f8010241b9ba6e31d9dcef3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _movementSpeed: 10
+  _movementSpeed: 2
+  _defaultState: {fileID: 7311776898023632386}
   _states:
-  - {fileID: 5839490800564724571}
+  - {fileID: 7311776898023632386}
   - {fileID: 8086378335826208004}
   - {fileID: 7125333577680088616}
   - {fileID: 6178672434901226487}
@@ -177,7 +178,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7371723956464871201}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -250,6 +251,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 147495220717115420}
     m_Modifications:
+    - target: {fileID: 1117655901935747866, guid: 45f5757dba2d0534cbdfbb01f0bd8614, type: 3}
+      propertyPath: _canTransitionFrom.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1117655901935747866, guid: 45f5757dba2d0534cbdfbb01f0bd8614, type: 3}
+      propertyPath: '_canTransitionFrom.Array.data[0]'
+      value: 
+      objectReference: {fileID: 6178672434901226487}
     - target: {fileID: 4715299063672026457, guid: 45f5757dba2d0534cbdfbb01f0bd8614, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -327,6 +336,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: PickUpBoxState
       objectReference: {fileID: 0}
+    - target: {fileID: 3324820010102926970, guid: bc0f9119dd902514797df2c567853f42, type: 3}
+      propertyPath: _canTransitionFrom.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3324820010102926970, guid: bc0f9119dd902514797df2c567853f42, type: 3}
+      propertyPath: '_canTransitionFrom.Array.data[0]'
+      value: 
+      objectReference: {fileID: 7311776898023632386}
+    - target: {fileID: 3324820010102926970, guid: bc0f9119dd902514797df2c567853f42, type: 3}
+      propertyPath: '_canTransitionFrom.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8086378335826208004}
     - target: {fileID: 8944490970489443470, guid: bc0f9119dd902514797df2c567853f42, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -396,6 +417,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 147495220717115420}
     m_Modifications:
+    - target: {fileID: 1704347201247395501, guid: 5f8220b2c8fdfef4dbe10cc4b430f86c, type: 3}
+      propertyPath: _canTransitionFrom.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1704347201247395501, guid: 5f8220b2c8fdfef4dbe10cc4b430f86c, type: 3}
+      propertyPath: '_canTransitionFrom.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8086378335826208004}
+    - target: {fileID: 1704347201247395501, guid: 5f8220b2c8fdfef4dbe10cc4b430f86c, type: 3}
+      propertyPath: '_canTransitionFrom.Array.data[1]'
+      value: 
+      objectReference: {fileID: 5491613650757033332}
+    - target: {fileID: 2582147082580227060, guid: 5f8220b2c8fdfef4dbe10cc4b430f86c, type: 3}
+      propertyPath: _canTransitionFrom.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2582147082580227060, guid: 5f8220b2c8fdfef4dbe10cc4b430f86c, type: 3}
+      propertyPath: '_canTransitionFrom.Array.data[0]'
+      value: 
+      objectReference: {fileID: 5491613650757033332}
     - target: {fileID: 2947844820686349959, guid: 5f8220b2c8fdfef4dbe10cc4b430f86c, type: 3}
       propertyPath: m_Name
       value: IdleState
@@ -450,15 +491,15 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3705772606916042931, guid: 5f8220b2c8fdfef4dbe10cc4b430f86c, type: 3}
   m_PrefabInstance: {fileID: 8277520348272070831}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5839490800564724571 stripped
+--- !u!114 &7311776898023632386 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2582147082580227060, guid: 5f8220b2c8fdfef4dbe10cc4b430f86c, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1704347201247395501, guid: 5f8220b2c8fdfef4dbe10cc4b430f86c, type: 3}
   m_PrefabInstance: {fileID: 8277520348272070831}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c609f3826cd76241a9123b000b1f7ca, type: 3}
+  m_Script: {fileID: 11500000, guid: 5bdd7c262d3ad1640bc8f51bcc24f8cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &8418619385647030542
@@ -469,6 +510,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 147495220717115420}
     m_Modifications:
+    - target: {fileID: 2408295974288782073, guid: 1de8393c9d11946479d9b5e2ba47a271, type: 3}
+      propertyPath: _canTransitionFrom.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2408295974288782073, guid: 1de8393c9d11946479d9b5e2ba47a271, type: 3}
+      propertyPath: '_canTransitionFrom.Array.data[0]'
+      value: 
+      objectReference: {fileID: 7125333577680088616}
     - target: {fileID: 7272305495098339784, guid: 1de8393c9d11946479d9b5e2ba47a271, type: 3}
       propertyPath: m_Name
       value: WalkWithBoxState
@@ -542,6 +591,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 147495220717115420}
     m_Modifications:
+    - target: {fileID: 1040947852492442125, guid: 455616022b67bc94ebf30cb3dad0cec5, type: 3}
+      propertyPath: _canTransitionFrom.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1040947852492442125, guid: 455616022b67bc94ebf30cb3dad0cec5, type: 3}
+      propertyPath: '_canTransitionFrom.Array.data[0]'
+      value: 
+      objectReference: {fileID: 7311776898023632386}
+    - target: {fileID: 1040947852492442125, guid: 455616022b67bc94ebf30cb3dad0cec5, type: 3}
+      propertyPath: '_canTransitionFrom.Array.data[1]'
+      value: 
+      objectReference: {fileID: 5491613650757033332}
     - target: {fileID: 2227398656658983349, guid: 455616022b67bc94ebf30cb3dad0cec5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
