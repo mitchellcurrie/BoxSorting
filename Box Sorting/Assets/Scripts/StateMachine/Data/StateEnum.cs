@@ -1,6 +1,6 @@
 public enum StateEnum
 {
-    Idle,
+    SearchForBoxes,
     WalkToBox,
     PickUpBox,
     WalkWithBox,

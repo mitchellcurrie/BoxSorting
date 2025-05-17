@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-public class IdleState : State
+public class SearchForBoxesState : State
 {
     public override void OnUpdate(float deltaTime)
     {

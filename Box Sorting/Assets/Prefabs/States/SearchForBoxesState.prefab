@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3705772606916042931}
   - component: {fileID: 1704347201247395501}
   m_Layer: 0
-  m_Name: IdleState
+  m_Name: SearchForBoxesState
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
