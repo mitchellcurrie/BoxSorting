@@ -1,4 +1,4 @@
-public enum StateEnum
+public enum StateName
 {
     SearchForBoxes,
     WalkToBox,

@@ -34,8 +34,8 @@ public class SearchForBoxesState : State
         
         if (hit)
         {
-            _characterController.SetMoveTarget(direction, hit.point);
-            _stateMachine.TryChangeState(StateEnum.WalkToBox);
+            _characterController.SetMoveTarget(hit.point);
+            _stateMachine.TryChangeState(StateName.WalkToBox);
         }
     }
 }

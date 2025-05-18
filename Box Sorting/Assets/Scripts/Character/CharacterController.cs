@@ -10,18 +10,22 @@ public class CharacterController : MonoBehaviour
 
     [Header("Settings")] 
     [SerializeField] private float _movementSpeed = 2;
-    [SerializeField] private Transform _heldObjectTransform;
     
     [Header("State Machine")]
     [SerializeField] private State _defaultState;
     [SerializeField] private State[] _states;
-
+    
+    [Header("Setup")]
+    [SerializeField] private Transform _blueBoxParent;
+    [SerializeField] private Transform _redBoxParent;
+    [SerializeField] private Transform _blueFlag;
+    [SerializeField] private Transform _redFlag;
+    
     private StateMachine _stateMachine;
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
-    private Vector2 _targetDirection;
     private Vector2 _targetPosition;
-    private GameObject _collidedBox;
+    private Box _collidedBox;
     private bool _holdingBox;
     private bool _moving;
 
@@ -30,14 +34,10 @@ public class CharacterController : MonoBehaviour
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
 
-        if (!_heldObjectTransform)
-        {
-            Debug.LogError("Held Object Transform is not set");
-        }
-        
+        ValidateFields();
         InitStateMachine();
     }
-
+    
     private void InitStateMachine()
     {
         _stateMachine = new StateMachine(this);
@@ -66,15 +66,15 @@ public class CharacterController : MonoBehaviour
             Time.deltaTime * _movementSpeed);
     }
 
-    public void SetMoveTarget(Vector2 targetDirection, Vector2 targetPosition)
+    public void SetMoveTarget(Vector2 targetPosition)
     {
-        _targetDirection = targetDirection;
         _targetPosition = targetPosition;
     }
 
     public void MoveToTarget()
     {
-        _spriteRenderer.flipX = _targetDirection == Vector2.left;
+        _spriteRenderer.flipX = Vector2.Dot(_targetPosition - (Vector2)transform.position, Vector2.left) > 0;
+        //_spriteRenderer.flipX = _targetDirection == Vector2.left;
         _moving = true;
         _animator.SetBool(WALK_ANIM_BOOL, true);
     }
@@ -92,7 +92,7 @@ public class CharacterController : MonoBehaviour
             return;
         }
         
-        _collidedBox.transform.SetParent(_heldObjectTransform);
+        _collidedBox.transform.SetParent(_collidedBox.Colour == BoxColour.Blue ? _blueBoxParent : _redBoxParent);
         _collidedBox.transform.SetLocalPositionAndRotation(Vector3.zero, _collidedBox.transform.rotation);
         
         _animator.SetBool(HOLD_ANIM_BOOL, true);
@@ -113,10 +113,33 @@ public class CharacterController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Box") && !_holdingBox)
+        if (collision.CompareTag("Box"))
         {
-            _collidedBox = collision.gameObject;
-            _stateMachine.TryChangeState(StateEnum.PickUpBox);
+            if (_holdingBox || !collision.TryGetComponent<Box>(out var box))
+            {
+                return;
+            }
+            
+            _collidedBox = box;
+            SetMoveTarget(_collidedBox.Colour == BoxColour.Blue ? _blueFlag.position : _redFlag.position);
+                
+            if (_stateMachine.TryChangeState(StateName.PickUpBox))
+            {
+                _collidedBox.OnPickedUp();
+            }
+        }
+    }
+    
+    private void ValidateFields()
+    {
+        if (!_blueBoxParent || !_redBoxParent)
+        {
+            Debug.LogError("Held Object Transforms are not set");
+        }
+
+        if (!_blueFlag || !_redFlag)
+        {
+            Debug.LogError("Flags are not set");
         }
     }
 }

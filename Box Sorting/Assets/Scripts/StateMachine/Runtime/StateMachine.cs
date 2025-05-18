@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class StateMachine
 {
-    private readonly Dictionary<StateEnum, State> _states = new();
+    private readonly Dictionary<StateName, State> _states = new();
     private readonly CharacterController _characterController;
     private State _currentState;
 
@@ -18,7 +18,7 @@ public class StateMachine
         _states.Add(state.Name, state);
     }
 
-    private State GetState(StateEnum key) //TODO: Do we need this method?
+    private State GetState(StateName key) //TODO: Do we need this method?
     {
         if (_states.TryGetValue(key, out var state))
         {
@@ -29,9 +29,9 @@ public class StateMachine
         return null;
     }
 
-    public bool TryChangeState(StateEnum stateEnum)
+    public bool TryChangeState(StateName stateName)
     {
-        var newState = GetState(stateEnum);
+        var newState = GetState(stateName);
         
         if (!newState)
         {

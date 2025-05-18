@@ -5,7 +5,7 @@ public abstract class State : MonoBehaviour
 {
     //[SerializeField] private UnityEvent _onEnter = new();
     //[SerializeField] private UnityEvent _onExit = new();
-    [field:SerializeField] public StateEnum Name { get; private set; }
+    [field:SerializeField] public StateName Name { get; private set; }
     [SerializeField] private List<State> _canTransitionFrom = new();
     
     protected StateMachine _stateMachine;

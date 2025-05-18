@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -5769572330233735633, guid: 46390f5476ff7c5489194166c9febccf, type: 3}
+    - target: {fileID: 6324883323233649467, guid: 7b1462e2124ac0f4c9ef26c25bb4eb96, type: 3}
+      propertyPath: <Colour>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8400983228134558269, guid: 7b1462e2124ac0f4c9ef26c25bb4eb96, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

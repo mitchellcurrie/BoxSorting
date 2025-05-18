@@ -46,7 +46,7 @@ GameObject:
   m_Component:
   - component: {fileID: 113618541707192350}
   m_Layer: 2
-  m_Name: HeldObject
+  m_Name: HeldObjectRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -61,7 +61,38 @@ Transform:
   m_GameObject: {fileID: 5592558052402005083}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.6, y: -0.25, z: 0}
+  m_LocalPosition: {x: 0.65, y: 0.22, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5420011873407877571}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5985915404749977692
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4403688482774174168}
+  m_Layer: 2
+  m_Name: HeldObjectLeft
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4403688482774174168
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5985915404749977692}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.65, y: 0.22, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -102,6 +133,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 113618541707192350}
+  - {fileID: 4403688482774174168}
   - {fileID: 147495220717115420}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -118,7 +150,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _movementSpeed: 2
-  _heldObjectTransform: {fileID: 113618541707192350}
   _defaultState: {fileID: 2765726473741457763}
   _states:
   - {fileID: 2765726473741457763}
@@ -126,6 +157,10 @@ MonoBehaviour:
   - {fileID: 7125333577680088616}
   - {fileID: 6178672434901226487}
   - {fileID: 5491613650757033332}
+  _blueBoxParent: {fileID: 0}
+  _redBoxParent: {fileID: 0}
+  _blueFlag: {fileID: 0}
+  _redFlag: {fileID: 0}
 --- !u!95 &7166420078085310179
 Animator:
   serializedVersion: 7
@@ -191,7 +226,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 4723107735738678597, guid: 23d2be8b711bed84ba763f65142b6927, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
