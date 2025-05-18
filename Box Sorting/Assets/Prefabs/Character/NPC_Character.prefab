@@ -158,6 +158,9 @@ MonoBehaviour:
   - {fileID: 7125333577680088616}
   - {fileID: 6178672434901226487}
   - {fileID: 5491613650757033332}
+  _onStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
   _blueBoxParent: {fileID: 0}
   _redBoxParent: {fileID: 0}
   _blueFlag: {fileID: 0}
@@ -282,7 +285,7 @@ BoxCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -667,7 +670,7 @@ PrefabInstance:
     - target: {fileID: 1040947852492442125, guid: 455616022b67bc94ebf30cb3dad0cec5, type: 3}
       propertyPath: '_canTransitionFrom.Array.data[2]'
       value: 
-      objectReference: {fileID: 5491613650757033332}
+      objectReference: {fileID: 6178672434901226487}
     - target: {fileID: 2227398656658983349, guid: 455616022b67bc94ebf30cb3dad0cec5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

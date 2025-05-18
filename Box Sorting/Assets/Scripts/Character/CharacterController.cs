@@ -12,6 +12,7 @@ public class CharacterController : MonoBehaviour
     [Header("Settings")] 
     [SerializeField] private float _movementSpeed = 2;
     [SerializeField] private int _dropBoxForce = 200;
+    [SerializeField] private float _blockingBoxDistance = 2f;
     
     [Header("State Machine")]
     [SerializeField] private State _defaultState;
@@ -33,6 +34,7 @@ public class CharacterController : MonoBehaviour
     private bool _movingLeft;
     private Vector2 _targetPosition;
     private Box _collidedBox;
+    private bool _isBlocked;
 
     private void Awake()
     {
@@ -103,6 +105,18 @@ public class CharacterController : MonoBehaviour
         _animator.SetBool(WALK_ANIM_BOOL, false);
     }
 
+    public bool IsBoxBlockingTarget(Vector2 blockingBoxPosition)
+    {
+        var targetDirection = _movingLeft ? Vector2.left : Vector2.right;
+        var distanceToBlockingBox = Vector2.Distance(blockingBoxPosition, transform.position);
+        
+        // TODO: Add comment
+        _isBlocked = distanceToBlockingBox < _blockingBoxDistance &&
+                    Vector2.Dot(blockingBoxPosition - (Vector2)transform.position, targetDirection) > 0;
+        
+        return _isBlocked;
+    }
+
     public void PickUpBox()
     {
         _collidedBox.transform.SetParent(_collidedBox.Colour == BoxColour.Blue ? _blueBoxParent : _redBoxParent);
@@ -113,15 +127,32 @@ public class CharacterController : MonoBehaviour
     
     public void DropBox()
     {
+        if (!_collidedBox)
+        {
+            Debug.LogError("Can't drop box as it is null!");
+            return;
+        }
+        
         _collidedBox.transform.SetParent(null);
         
-        var dropDirection = _movingLeft ? Vector2.left : Vector2.right;
-        _collidedBox.OnDropped(dropDirection * _dropBoxForce);
-        _collidedBox.DelayedDespawn();
+        //var dropDirection = _movingLeft && !_isBlocked ? Vector2.left : Vector2.right;
+
+        var dropDirection = !_isBlocked ? _movingLeft ? Vector2.left : Vector2.right :
+                                                 _movingLeft ? Vector2.right : Vector2.left;
+        
+        _collidedBox.OnDropped(dropDirection * _dropBoxForce, !_isBlocked);
+        
+        if (!_isBlocked)
+        {
+            _collidedBox.DelayedDespawn();
+        }
+        
         _collidedBox = null;
         
         _animator.SetBool(HOLD_ANIM_BOOL, false);
         _animator.SetBool(WALK_ANIM_BOOL, false);
+
+        _isBlocked = false;
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -143,6 +174,16 @@ public class CharacterController : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other)
+    {
+        CheckFlagCollision(other);
+    }
+    
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        CheckFlagCollision(other);
+    }
+
+    private void CheckFlagCollision(Collider2D other)
     {
         if (!other.gameObject.CompareTag("Flag") || _currentState != StateName.WalkWithBox)
         {

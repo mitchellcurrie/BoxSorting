@@ -49,6 +49,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Colour>k__BackingField: 0
   _rotationMaxForce: 20
+  _timeUntilFade: 5
+  _fadeDuration: 2
 --- !u!212 &206559722820945258
 SpriteRenderer:
   m_ObjectHideFlags: 0

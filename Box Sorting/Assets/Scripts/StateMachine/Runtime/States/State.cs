@@ -3,8 +3,6 @@ using UnityEngine;
 
 public abstract class State : MonoBehaviour
 {
-    //[SerializeField] private UnityEvent _onEnter = new();
-    //[SerializeField] private UnityEvent _onExit = new();
     [field:SerializeField] public StateName Name { get; private set; }
     [SerializeField] private List<State> _canTransitionFrom = new();
     
@@ -22,15 +20,9 @@ public abstract class State : MonoBehaviour
         return _canTransitionFrom.Contains(currentState);
     }
     
-    public virtual void OnEnter()
-    {
-        //_onEnter?.Invoke();
-    }
-    
+    public virtual void OnEnter() { }
+
     public virtual void OnUpdate(float deltaTime) { }
 
-    public virtual void OnExit()
-    {
-        //_onExit?.Invoke();
-    }
+    public virtual void OnExit()  { }
 }

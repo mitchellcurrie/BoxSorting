@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class StateMachine
 {
-    public StateName CurrentState => _currentState.Name;
+    public StateName CurrentState => _currentState.Name; 
+    public StateName PreviousState => _previousState.Name;
     public Action<StateName> OnStateChanged;
     
     private readonly Dictionary<StateName, State> _states = new();
     private readonly CharacterController _characterController;
     private State _currentState;
+    private State _previousState;
 
     public StateMachine(CharacterController characterController)
     {
@@ -54,7 +56,10 @@ public class StateMachine
             _currentState.OnExit();
         }
         
+        Debug.Log($"Change state to <color=green>{newState.Name}</color> from <color=red>{_currentState}</color>"); 
+        
         OnStateChanged?.Invoke(newState.Name);
+        _previousState = _currentState;
         _currentState = newState;
         _currentState.OnEnter();
         return true;

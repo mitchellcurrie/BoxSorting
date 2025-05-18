@@ -1345,7 +1345,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7058796804430142396, guid: e37e37bf876236e41bbfef341cfbb252, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: 7058796804430142396, guid: e37e37bf876236e41bbfef341cfbb252, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2125,7 +2125,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5420011873407877571, guid: ede352503ad78e744bcb58f4b3c0e1ef, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4
+      value: 3.27
       objectReference: {fileID: 0}
     - target: {fileID: 5420011873407877571, guid: ede352503ad78e744bcb58f4b3c0e1ef, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2272,7 +2272,9 @@ MonoBehaviour:
   - {fileID: 9215810635223859336, guid: 7b1462e2124ac0f4c9ef26c25bb4eb96, type: 3}
   - {fileID: 5823776310032496960, guid: adb688a3566572d47a560c9030dc3e8a, type: 3}
   _maximumNumberOfObjects: 20
-  _spawnRateSeconds: 2
+  _spawnRateSeconds: 3
+  _randomMaxForce: 100
+  _randomForceMaxAngleDegrees: 75
 --- !u!4 &2036822746
 Transform:
   m_ObjectHideFlags: 0
@@ -2371,7 +2373,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2998559073887584864, guid: edd8a2745a0ad97438ec4c660bd6f07a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5
+      value: -4.5
       objectReference: {fileID: 0}
     - target: {fileID: 2998559073887584864, guid: edd8a2745a0ad97438ec4c660bd6f07a, type: 3}
       propertyPath: m_LocalPosition.y

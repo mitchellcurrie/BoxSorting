@@ -8,6 +8,8 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField] private List<GameObject> _spawnPool = new();
     [SerializeField] private int _maximumNumberOfObjects = 20;
     [SerializeField] private float _spawnRateSeconds = 5f;
+    [SerializeField] private int _randomMaxForce = 50;
+    [SerializeField] private int _randomForceMaxAngleDegrees = 45;
     
     private List<GameObject> _objectPool = new();
     private Transform[] _spawnTransforms = Array.Empty<Transform>();
@@ -59,10 +61,20 @@ public class ObjectSpawner : MonoBehaviour
         obj.transform.SetPositionAndRotation(randomSpawnLocation.position, randomSpawnLocation.rotation);
         obj.transform.SetParent(transform);
         obj.SetActive(true);
+        
+        if (obj.TryGetComponent<Rigidbody2D>(out var rigidBody))
+        {
+            Vector2 forceDirection = Quaternion.Euler(0, 0, 
+                Random.Range(-_randomForceMaxAngleDegrees, _randomForceMaxAngleDegrees)) * Vector2.down;
+            var force = Random.Range(0, _randomMaxForce);
+            rigidBody.AddForce(forceDirection * force);
+            Debug.Log($"Add Force: {force}");
+        }
     }
 
     private GameObject GetObjectFromPool()
     {
+        // TODO: Get randomly from list
         foreach (var obj in _objectPool)
         {
             if (obj && !obj.activeInHierarchy)
