@@ -12,7 +12,7 @@ public class WalkWithBoxState : BoxScanState
     {
         if (_characterController.IsBoxBlockingTarget(hitBox.point))
         {
-            _stateMachine.TryChangeState(StateName.DropBox);
+            _stateMachine.TryChangeState(StateName.ThrowBox);
         }
     }
 }

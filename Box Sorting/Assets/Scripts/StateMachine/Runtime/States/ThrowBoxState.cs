@@ -1,19 +1,19 @@
 using System.Collections;
 using UnityEngine;
 
-public class DropBoxState : State
+public class ThrowBoxState : State
 {
-    [SerializeField] private float _delayAfterDrop = 0.2f;
+    [SerializeField] private float _delayAfterThrow = 0.2f;
     
     public override void OnEnter()
     {
-       _characterController.DropBoxAtTarget();
+       _characterController.ThrowBox();
        StartCoroutine(DelayedChangeState());
     }
 
     private IEnumerator DelayedChangeState()
     {
-        yield return new WaitForSeconds(_delayAfterDrop);
+        yield return new WaitForSeconds(_delayAfterThrow);
         _stateMachine.TryChangeState(StateName.SearchForBoxes);
     }
 }

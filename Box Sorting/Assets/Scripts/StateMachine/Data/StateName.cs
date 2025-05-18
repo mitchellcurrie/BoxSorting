@@ -4,6 +4,7 @@ public enum StateName
     WalkToBox,
     PickUpBox,
     WalkWithBox,
-    DropBox
+    DropBox,
+    ThrowBox,
 }
 

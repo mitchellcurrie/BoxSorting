@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,8 +10,9 @@ public class CharacterController : MonoBehaviour
 
     [Header("Settings")] 
     [SerializeField] private float _movementSpeed = 2;
-    [SerializeField] private int _dropBoxAtTargetForce = 300;
-    [SerializeField] private int _dropBoxWhenBlockedForce = 250;
+    [SerializeField] private int _dropBoxForce = 300;
+    [SerializeField] private int _throwBoxForce = 400;
+    [SerializeField] private int _throwBoxAngleDegrees = 60;
     [SerializeField] private float _blockingBoxDistance = 2f;
     
     [Header("State Machine")]
@@ -35,7 +35,6 @@ public class CharacterController : MonoBehaviour
     private bool _movingLeft;
     private Vector2 _targetPosition;
     private Box _collidedBox;
-    private bool _isBlocked;
 
     private void Awake()
     {
@@ -112,10 +111,8 @@ public class CharacterController : MonoBehaviour
         var distanceToBlockingBox = Vector2.Distance(blockingBoxPosition, transform.position);
         
         // TODO: Add comment
-        _isBlocked = distanceToBlockingBox < _blockingBoxDistance &&
+        return distanceToBlockingBox < _blockingBoxDistance &&
                     Vector2.Dot(blockingBoxPosition - (Vector2)transform.position, targetDirection) > 0;
-        
-        return _isBlocked;
     }
 
     public void PickUpBox()
@@ -126,36 +123,40 @@ public class CharacterController : MonoBehaviour
         _animator.SetBool(HOLD_ANIM_BOOL, true);
     }
     
-    public void DropBox()
+    public void DropBoxAtTarget()
+    {
+        var dropDirection = _movingLeft ? Vector2.left : Vector2.right;
+        ReleaseBox(dropDirection *_dropBoxForce);
+    }
+    
+    public void ThrowBox()
+    {
+        var throwDirection = _movingLeft ? Vector2.left : Vector2.right;
+        var angle = _movingLeft ? -_throwBoxAngleDegrees : _throwBoxAngleDegrees;
+        throwDirection = Quaternion.Euler(0, 0, angle) * throwDirection;
+        
+        Debug.Log($"Throw Direction: {throwDirection}   --   Angle: {_throwBoxAngleDegrees}");
+        
+        ReleaseBox(throwDirection * _throwBoxForce);
+    }
+
+    private void ReleaseBox(Vector2 releaseForce)
     {
         if (!_collidedBox)
         {
-            Debug.LogError("Can't drop box as it is null!");
+            Debug.LogError("Can't release box as it is null!");
             return;
         }
         
         _collidedBox.transform.SetParent(null);
-        
-        //var dropDirection = _movingLeft && !_isBlocked ? Vector2.left : Vector2.right;
 
-        var dropDirection = !_isBlocked ? _movingLeft ? Vector2.left : Vector2.right :
-                                                 _movingLeft ? Vector2.right : Vector2.left;
-
-        var dropForce = _isBlocked ? _dropBoxWhenBlockedForce : _dropBoxAtTargetForce;
-        
-        _collidedBox.OnDropped(dropDirection * dropForce, !_isBlocked);
-        
-        if (!_isBlocked)
-        {
-            _collidedBox.DelayedDespawn();
-        }
+        var dropDirection = _movingLeft ? Vector2.left : Vector2.right;
+        _collidedBox.OnReleased(releaseForce);
         
         _collidedBox = null;
         
         _animator.SetBool(HOLD_ANIM_BOOL, false);
         _animator.SetBool(WALK_ANIM_BOOL, false);
-
-        _isBlocked = false;
     }
 
     private void OnCollisionEnter2D(Collision2D other)

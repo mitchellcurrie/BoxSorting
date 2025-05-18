@@ -51,6 +51,7 @@ MonoBehaviour:
   _rotationMaxForce: 20
   _timeUntilFade: 5
   _fadeDuration: 2
+  _ignoreTimeAfterDropped: 1.5
 --- !u!212 &206559722820945258
 SpriteRenderer:
   m_ObjectHideFlags: 0
