@@ -53,6 +53,11 @@ public class Box : MonoBehaviour
             gameObject.layer = LayerMask.NameToLayer(IGNORE_RAYCAST_LAYER);
             StartCoroutine(DelayedDespawnRoutine());
         }
+        
+        if (other.gameObject.CompareTag("SpawnArea"))
+        {
+            _rigidbody.AddTorque(Random.Range(-_rotationMaxForce, _rotationMaxForce));
+        }
     }
     
     private IEnumerator DelayedSetLayerToDefault()

@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Colour>k__BackingField: 0
-  _rotationMaxForce: 20
+  _rotationMaxForce: 30
   _timeUntilFade: 5
   _fadeDuration: 2
   _ignoreTimeAfterDropped: 1.5

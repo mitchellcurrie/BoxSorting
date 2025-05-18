@@ -14,6 +14,7 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private int _throwBoxForce = 400;
     [SerializeField] private int _throwBoxAngleDegrees = 60;
     [SerializeField] private float _blockingBoxDistance = 2f;
+    [SerializeField] private float _stuckDistance = 0.1f;
     
     [Header("State Machine")]
     [SerializeField] private State _defaultState;
@@ -79,6 +80,18 @@ public class CharacterController : MonoBehaviour
             return;
         }
         
+        // Check if the NPC has reached the target point, which should only happen if the target box has despawned
+        // This prevents them getting stuck
+        if (Mathf.Abs(transform.position.x - _targetPosition.x) < _stuckDistance)
+        {
+            _stateMachine.TryChangeState(StateName.SearchForBoxes);
+        }
+
+        if (_currentState == StateName.WalkWithBox && !_collidedBox.gameObject.activeInHierarchy)
+        {
+            _stateMachine.TryChangeState(StateName.SearchForBoxes);
+        }
+        
         transform.position = Vector2.MoveTowards(transform.position, _targetPosition, 
             Time.deltaTime * _movementSpeed);
     }
@@ -100,8 +113,14 @@ public class CharacterController : MonoBehaviour
         _spriteRenderer.flipX = !_spriteRenderer.flipX;
     }
     
-    public void StopMoving()
+    public void StopWalkAnimation()
     {
+        _animator.SetBool(WALK_ANIM_BOOL, false);
+    }
+
+    public void StopAllMovingAnimations()
+    {
+        _animator.SetBool(HOLD_ANIM_BOOL, false);
         _animator.SetBool(WALK_ANIM_BOOL, false);
     }
 
@@ -155,8 +174,7 @@ public class CharacterController : MonoBehaviour
         
         _collidedBox = null;
         
-        _animator.SetBool(HOLD_ANIM_BOOL, false);
-        _animator.SetBool(WALK_ANIM_BOOL, false);
+        StopAllMovingAnimations();
     }
 
     private void OnCollisionEnter2D(Collision2D other)

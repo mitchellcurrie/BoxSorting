@@ -7,6 +7,6 @@ public class WalkToBoxState : State
 
     public override void OnExit()
     {
-        _characterController.StopMoving();
+        _characterController.StopWalkAnimation();
     }
 }

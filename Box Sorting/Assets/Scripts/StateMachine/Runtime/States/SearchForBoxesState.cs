@@ -10,6 +10,7 @@ public class SearchForBoxesState : BoxScanState
     public override void OnEnter()
     {
         base.OnEnter();
+        _characterController.StopAllMovingAnimations();
         SetRandomFlipTime();
     }
 
