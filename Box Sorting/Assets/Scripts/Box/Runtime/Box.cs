@@ -1,15 +1,22 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class Box : MonoBehaviour
 {
     [field: SerializeField] public BoxColour Colour { get; private set; }
+    [SerializeField] private int _rotationMaxForce = 20;
+    [SerializeField] private int _timeUntilFade = 15;
+    [SerializeField] private float _fadeDuration = 2;
     
     private Rigidbody2D _rigidbody; 
+    private SpriteRenderer _renderer;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        _renderer = GetComponent<SpriteRenderer>();
     }
 
     public void OnPickedUp()
@@ -28,6 +35,28 @@ public class Box : MonoBehaviour
         // Set to ignore raycasts so the NPC character doesn't try and pick it up again
         gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
         
+        _rigidbody.AddTorque(Random.Range(-_rotationMaxForce, _rotationMaxForce));
         _rigidbody.AddForce(dropForce);
+    }
+
+    public void DelayedDespawn()
+    {
+        StartCoroutine(DelayedDespawnRoutine());
+    }
+
+    private IEnumerator DelayedDespawnRoutine()
+    {
+        yield return new WaitForSeconds(_timeUntilFade);
+      
+        var timer = 0f;
+        var colour = _renderer.color;
+
+        while (timer < _fadeDuration)
+        {
+            var alpha = Mathf.Lerp(1f, 0f, timer / _fadeDuration);
+            _renderer.color = new Color(colour.r, colour.g, colour.b, alpha);
+            timer += Time.deltaTime;
+            yield return null;
+        }
     }
 }

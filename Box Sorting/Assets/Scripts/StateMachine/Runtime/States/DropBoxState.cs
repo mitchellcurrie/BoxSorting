@@ -15,6 +15,5 @@ public class DropBoxState : State
     {
         yield return new WaitForSeconds(_delayAfterDrop);
         _stateMachine.TryChangeState(StateName.SearchForBoxes);
-        
     }
 }

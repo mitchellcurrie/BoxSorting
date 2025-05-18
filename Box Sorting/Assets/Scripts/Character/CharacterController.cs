@@ -117,6 +117,7 @@ public class CharacterController : MonoBehaviour
         
         var dropDirection = _movingLeft ? Vector2.left : Vector2.right;
         _collidedBox.OnDropped(dropDirection * _dropBoxForce);
+        _collidedBox.DelayedDespawn();
         _collidedBox = null;
         
         _animator.SetBool(HOLD_ANIM_BOOL, false);
