@@ -1,6 +1,3 @@
-
-using UnityEngine;
-
 public class WalkToBoxState : State
 {
     public override void OnEnter()

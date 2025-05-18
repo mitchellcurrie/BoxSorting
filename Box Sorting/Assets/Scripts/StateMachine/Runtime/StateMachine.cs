@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class StateMachine
 {
+    public StateName CurrentState => _currentState.Name;
+    
     private readonly Dictionary<StateName, State> _states = new();
     private readonly CharacterController _characterController;
     private State _currentState;
@@ -25,7 +27,7 @@ public class StateMachine
             return state;
         }
         
-        Debug.LogError("State not found: " + key);
+        Debug.LogError($"State not found: {key}");
         return null;
     }
 
@@ -43,14 +45,14 @@ public class StateMachine
         {
             if (!newState.CanEnter(_currentState))
             {
-                Debug.LogError("Cannot Enter " + newState.Name + " from " + _currentState); // TODO: Change to normal log or remove
+                Debug.LogError($"Cannot Enter {newState.Name} from {_currentState}"); // TODO: Change to normal log or remove
                 return false;
             }
             
             _currentState.OnExit();
         }
-        
-        Debug.Log("State changed to " + newState.Name + " from " + _currentState); // TODO: Remove
+
+        Debug.Log($"State changed to <color=green>{newState.Name}</color> from <color=red>{(_currentState ? _currentState.Name : "None")}</color>");
 
         _currentState = newState;
         _currentState.OnEnter();

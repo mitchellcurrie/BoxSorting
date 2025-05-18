@@ -45,3 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Name>k__BackingField: 4
+  _canTransitionFrom: []
+  _delayBeforeSearchingAgain: 0.2

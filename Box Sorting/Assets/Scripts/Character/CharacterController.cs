@@ -10,6 +10,7 @@ public class CharacterController : MonoBehaviour
 
     [Header("Settings")] 
     [SerializeField] private float _movementSpeed = 2;
+    [SerializeField] private int _dropBoxForce = 200;
     
     [Header("State Machine")]
     [SerializeField] private State _defaultState;
@@ -24,10 +25,11 @@ public class CharacterController : MonoBehaviour
     private StateMachine _stateMachine;
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
+    private bool _movingLeft;
     private Vector2 _targetPosition;
     private Box _collidedBox;
-    private bool _holdingBox;
-    private bool _moving;
+    // private bool _holdingBox;
+    // private bool _moving;
 
     private void Awake()
     {
@@ -57,7 +59,7 @@ public class CharacterController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!_moving)
+        if (_stateMachine.CurrentState != StateName.WalkToBox && _stateMachine.CurrentState != StateName.WalkWithBox)
         {
             return;
         }
@@ -68,66 +70,67 @@ public class CharacterController : MonoBehaviour
 
     public void SetMoveTarget(Vector2 targetPosition)
     {
-        _targetPosition = targetPosition;
+        _targetPosition = new Vector2(targetPosition.x, 0); // Keep character at Y pos 0.
     }
 
     public void MoveToTarget()
     {
-        _spriteRenderer.flipX = Vector2.Dot(_targetPosition - (Vector2)transform.position, Vector2.left) > 0;
-        //_spriteRenderer.flipX = _targetDirection == Vector2.left;
-        _moving = true;
+        _movingLeft = Vector2.Dot(_targetPosition - (Vector2)transform.position, Vector2.left) > 0;
+        _spriteRenderer.flipX = _movingLeft;
         _animator.SetBool(WALK_ANIM_BOOL, true);
     }
     
     public void StopMoving()
     {
-        _moving = false;
         _animator.SetBool(WALK_ANIM_BOOL, false);
     }
 
     public void PickUpBox()
     {
-        if (_holdingBox) // TODO: Do we need this?
-        {
-            return;
-        }
-        
         _collidedBox.transform.SetParent(_collidedBox.Colour == BoxColour.Blue ? _blueBoxParent : _redBoxParent);
         _collidedBox.transform.SetLocalPositionAndRotation(Vector3.zero, _collidedBox.transform.rotation);
         
         _animator.SetBool(HOLD_ANIM_BOOL, true);
-        _holdingBox = true;
     }
     
-    public void ThrowBox()
+    public void DropBox()
     {
-        if (!_holdingBox)
+        _collidedBox.transform.SetParent(null);
+        
+        var dropDirection = _movingLeft ? Vector2.left : Vector2.right;
+        _collidedBox.OnDropped(dropDirection * _dropBoxForce);
+        _collidedBox = null;
+        
+        _animator.SetBool(HOLD_ANIM_BOOL, false);
+        _animator.SetBool(WALK_ANIM_BOOL, false);
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (!other.gameObject.CompareTag("Box") ||
+            (_stateMachine.CurrentState != StateName.SearchForBoxes && _stateMachine.CurrentState != StateName.WalkToBox) 
+            || !other.gameObject.TryGetComponent<Box>(out var box))
         {
             return;
         }
         
-        _animator.SetBool(HOLD_ANIM_BOOL, false);
-        _animator.SetBool(WALK_ANIM_BOOL, false);
-        _holdingBox = false;
+        _collidedBox = box;
+        SetMoveTarget(_collidedBox.Colour == BoxColour.Blue ? _blueFlag.position : _redFlag.position);
+            
+        if (_stateMachine.TryChangeState(StateName.PickUpBox))
+        {
+            _collidedBox.OnPickedUp();
+        }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.CompareTag("Box"))
+        if (!other.gameObject.CompareTag("Flag") || _stateMachine.CurrentState != StateName.WalkWithBox)
         {
-            if (_holdingBox || !collision.TryGetComponent<Box>(out var box))
-            {
-                return;
-            }
-            
-            _collidedBox = box;
-            SetMoveTarget(_collidedBox.Colour == BoxColour.Blue ? _blueFlag.position : _redFlag.position);
-                
-            if (_stateMachine.TryChangeState(StateName.PickUpBox))
-            {
-                _collidedBox.OnPickedUp();
-            }
+            return;
         }
+
+        _stateMachine.TryChangeState(StateName.DropBox);
     }
     
     private void ValidateFields()

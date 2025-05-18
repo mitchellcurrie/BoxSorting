@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _movementSpeed: 2
+  _dropBoxForce: 200
   _defaultState: {fileID: 2765726473741457763}
   _states:
   - {fileID: 2765726473741457763}
@@ -295,7 +296,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -653,7 +654,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1040947852492442125, guid: 455616022b67bc94ebf30cb3dad0cec5, type: 3}
       propertyPath: _canTransitionFrom.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1040947852492442125, guid: 455616022b67bc94ebf30cb3dad0cec5, type: 3}
       propertyPath: '_canTransitionFrom.Array.data[0]'
@@ -662,7 +663,7 @@ PrefabInstance:
     - target: {fileID: 1040947852492442125, guid: 455616022b67bc94ebf30cb3dad0cec5, type: 3}
       propertyPath: '_canTransitionFrom.Array.data[1]'
       value: 
-      objectReference: {fileID: 8086378335826208004}
+      objectReference: {fileID: 5491613650757033332}
     - target: {fileID: 1040947852492442125, guid: 455616022b67bc94ebf30cb3dad0cec5, type: 3}
       propertyPath: '_canTransitionFrom.Array.data[2]'
       value: 
