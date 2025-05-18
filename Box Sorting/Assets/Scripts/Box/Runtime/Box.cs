@@ -12,11 +12,13 @@ public class Box : MonoBehaviour
     
     private Rigidbody2D _rigidbody; 
     private SpriteRenderer _renderer;
+    private Color _colour;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _renderer = GetComponent<SpriteRenderer>();
+        _colour = _renderer.color;
     }
 
     public void OnPickedUp()
@@ -49,14 +51,21 @@ public class Box : MonoBehaviour
         yield return new WaitForSeconds(_timeUntilFade);
       
         var timer = 0f;
-        var colour = _renderer.color;
 
         while (timer < _fadeDuration)
         {
             var alpha = Mathf.Lerp(1f, 0f, timer / _fadeDuration);
-            _renderer.color = new Color(colour.r, colour.g, colour.b, alpha);
+            _renderer.color = new Color(_colour.r, _colour.g, _colour.b, alpha);
             timer += Time.deltaTime;
             yield return null;
         }
+        
+        _renderer.color = new Color(_colour.r, _colour.g, _colour.b, 0);
+        gameObject.SetActive(false);
+    }
+    
+    private void OnEnable()
+    {
+        _renderer.color = _colour;
     }
 }

@@ -1,0 +1,81 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using Random = UnityEngine.Random;
+
+public class ObjectSpawner : MonoBehaviour
+{
+    [SerializeField] private List<GameObject> _spawnPool = new();
+    [SerializeField] private int _maximumNumberOfObjects = 20;
+    [SerializeField] private float _spawnRateSeconds = 5f;
+    
+    private List<GameObject> _objectPool = new();
+    private Transform[] _spawnTransforms = Array.Empty<Transform>();
+    private float _spawnTimer;
+
+    private void Start()
+    {
+        _spawnTransforms = GetComponentsInChildren<Transform>();
+        InstantiateObjectPool();
+    }
+
+    private void InstantiateObjectPool()
+    {
+        var numberOfEachObject = _maximumNumberOfObjects / _spawnPool.Count;
+
+        foreach (var prefab in _spawnPool)
+        {
+            for (var i = 0; i < numberOfEachObject; i++)
+            {
+                var newObject = Instantiate(prefab, transform.position, Quaternion.identity, transform);
+                _objectPool.Add(newObject);
+                newObject.SetActive(false);
+            }
+        }
+    }
+
+    private void Update()
+    {
+        _spawnTimer += Time.deltaTime;
+
+        if (_spawnTimer >= _spawnRateSeconds)
+        {
+            SpawnObject();
+            _spawnTimer = 0;
+        }
+    }
+
+    public void SpawnObject()
+    {
+        var obj = GetObjectFromPool();
+
+        if (!obj)
+        {
+            Debug.LogError($"No valid object available in the pool");
+            return;
+        }
+
+        var randomSpawnLocation = GetRandomSpawnTransform();
+        obj.transform.SetPositionAndRotation(randomSpawnLocation.position, randomSpawnLocation.rotation);
+        obj.transform.SetParent(transform);
+        obj.SetActive(true);
+    }
+
+    private GameObject GetObjectFromPool()
+    {
+        foreach (var obj in _objectPool)
+        {
+            if (obj && !obj.activeInHierarchy)
+            {
+                return obj;
+            }
+        }
+
+        return null;
+    }
+
+    private Transform GetRandomSpawnTransform()
+    {
+        return _spawnTransforms[Random.Range(0, _spawnTransforms.Length)];
+    }
+}
