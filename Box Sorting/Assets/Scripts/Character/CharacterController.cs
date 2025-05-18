@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
@@ -16,6 +17,9 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private State _defaultState;
     [SerializeField] private State[] _states;
     
+    [Header("Events")]
+    [SerializeField] UnityEvent<StateName> _onStateChanged;
+    
     [Header("Setup")]
     [SerializeField] private Transform _blueBoxParent;
     [SerializeField] private Transform _redBoxParent;
@@ -23,13 +27,12 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private Transform _redFlag;
     
     private StateMachine _stateMachine;
+    private StateName _currentState;
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
     private bool _movingLeft;
     private Vector2 _targetPosition;
     private Box _collidedBox;
-    // private bool _holdingBox;
-    // private bool _moving;
 
     private void Awake()
     {
@@ -37,6 +40,10 @@ public class CharacterController : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
 
         ValidateFields();
+    }
+
+    private void Start()
+    {
         InitStateMachine();
     }
     
@@ -49,6 +56,12 @@ public class CharacterController : MonoBehaviour
             _stateMachine.Add(state); // add any other relevant SO data in here
         }
         
+        _stateMachine.OnStateChanged += newState =>
+        {
+            _currentState = newState;
+            _onStateChanged?.Invoke(newState);
+        };
+        
         _stateMachine.TryChangeState(_defaultState.Name);
     }
 
@@ -59,7 +72,7 @@ public class CharacterController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_stateMachine.CurrentState != StateName.WalkToBox && _stateMachine.CurrentState != StateName.WalkWithBox)
+        if (_currentState != StateName.WalkToBox && _currentState != StateName.WalkWithBox)
         {
             return;
         }
@@ -108,7 +121,7 @@ public class CharacterController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (!other.gameObject.CompareTag("Box") ||
-            (_stateMachine.CurrentState != StateName.SearchForBoxes && _stateMachine.CurrentState != StateName.WalkToBox) 
+            (_currentState != StateName.SearchForBoxes && _currentState != StateName.WalkToBox) 
             || !other.gameObject.TryGetComponent<Box>(out var box))
         {
             return;
@@ -125,7 +138,7 @@ public class CharacterController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.gameObject.CompareTag("Flag") || _stateMachine.CurrentState != StateName.WalkWithBox)
+        if (!other.gameObject.CompareTag("Flag") || _currentState != StateName.WalkWithBox)
         {
             return;
         }

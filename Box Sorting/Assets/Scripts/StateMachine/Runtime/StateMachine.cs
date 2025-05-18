@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class StateMachine
 {
     public StateName CurrentState => _currentState.Name;
+    public Action<StateName> OnStateChanged;
     
     private readonly Dictionary<StateName, State> _states = new();
     private readonly CharacterController _characterController;
@@ -51,9 +53,8 @@ public class StateMachine
             
             _currentState.OnExit();
         }
-
-        Debug.Log($"State changed to <color=green>{newState.Name}</color> from <color=red>{(_currentState ? _currentState.Name : "None")}</color>");
-
+        
+        OnStateChanged?.Invoke(newState.Name);
         _currentState = newState;
         _currentState.OnEnter();
         return true;
