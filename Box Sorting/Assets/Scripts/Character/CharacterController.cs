@@ -92,6 +92,11 @@ public class CharacterController : MonoBehaviour
         _spriteRenderer.flipX = _movingLeft;
         _animator.SetBool(WALK_ANIM_BOOL, true);
     }
+
+    public void FlipLookDirection()
+    {
+        _spriteRenderer.flipX = !_spriteRenderer.flipX;
+    }
     
     public void StopMoving()
     {

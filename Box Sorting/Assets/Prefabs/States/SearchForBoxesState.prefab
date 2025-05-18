@@ -47,3 +47,4 @@ MonoBehaviour:
   <Name>k__BackingField: 0
   _canTransitionFrom: []
   _searchesPerSecond: 4
+  _flipLookDirectionMinMaxSeconds: {x: 0.5, y: 5}
