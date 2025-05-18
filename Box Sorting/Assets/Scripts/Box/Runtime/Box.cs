@@ -9,6 +9,7 @@ public class Box : MonoBehaviour
     [SerializeField] private int _rotationMaxForce = 20;
     [SerializeField] private int _timeUntilFade = 15;
     [SerializeField] private float _fadeDuration = 2;
+    [SerializeField] private float _ignoreTimeAfterDropped = 2.5f;
     
     private const string IGNORE_RAYCAST_LAYER = "Ignore Raycast";
     private const string DEFAULT_LAYER = "Default";
@@ -31,6 +32,7 @@ public class Box : MonoBehaviour
         _rigidbody.linearVelocity = Vector2.zero;
         _rigidbody.angularVelocity = 0f;
         gameObject.layer = LayerMask.NameToLayer(IGNORE_RAYCAST_LAYER);
+        Debug.Log($"{gameObject.name} - On Picked Up - Ignore Raycast");
     }
 
     public void OnDropped(Vector2 dropForce, bool ignoreRaycastsPermanently = false)
@@ -42,9 +44,11 @@ public class Box : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer(IGNORE_RAYCAST_LAYER);
         _rigidbody.AddTorque(Random.Range(-_rotationMaxForce, _rotationMaxForce));
         _rigidbody.AddForce(dropForce);
+        Debug.Log($"{gameObject.name} - On Dropped Up - Ignore Raycast");
 
         if (!ignoreRaycastsPermanently)
         {
+            Debug.Log($"{gameObject.name} - Start Delay To Default");
             StartCoroutine(DelayedSetLayerToDefault());
         }
         
@@ -53,8 +57,9 @@ public class Box : MonoBehaviour
     
     private IEnumerator DelayedSetLayerToDefault()
     {
-        yield return new WaitForSeconds(1f); // TODO: TO Variables
+        yield return new WaitForSeconds(_ignoreTimeAfterDropped);
         gameObject.layer = LayerMask.NameToLayer(DEFAULT_LAYER);
+        Debug.Log($"{gameObject.name} - Set Default after delay");
     }
 
     public void DelayedDespawn()
@@ -82,6 +87,7 @@ public class Box : MonoBehaviour
     
     private void OnEnable()
     {
+        gameObject.layer = LayerMask.NameToLayer(DEFAULT_LAYER);
         _renderer.color = _colour;
     }
 }

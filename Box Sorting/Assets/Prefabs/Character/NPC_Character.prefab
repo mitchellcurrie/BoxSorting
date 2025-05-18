@@ -150,7 +150,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _movementSpeed: 2
-  _dropBoxForce: 200
+  _dropBoxForce: 350
+  _blockingBoxDistance: 2
   _defaultState: {fileID: 2765726473741457763}
   _states:
   - {fileID: 2765726473741457763}

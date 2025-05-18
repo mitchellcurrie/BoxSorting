@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -74,16 +76,9 @@ public class ObjectSpawner : MonoBehaviour
 
     private GameObject GetObjectFromPool()
     {
-        // TODO: Get randomly from list
-        foreach (var obj in _objectPool)
-        {
-            if (obj && !obj.activeInHierarchy)
-            {
-                return obj;
-            }
-        }
-
-        return null;
+        var randomIndices = Enumerable.Range(0, _objectPool.Count).OrderBy(_ => Random.value);
+        return randomIndices.Select(index => _objectPool[index])
+                            .FirstOrDefault(obj => obj && !obj.activeInHierarchy);
     }
 
     private Transform GetRandomSpawnTransform()

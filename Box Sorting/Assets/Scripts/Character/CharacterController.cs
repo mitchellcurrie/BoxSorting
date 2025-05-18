@@ -11,7 +11,8 @@ public class CharacterController : MonoBehaviour
 
     [Header("Settings")] 
     [SerializeField] private float _movementSpeed = 2;
-    [SerializeField] private int _dropBoxForce = 200;
+    [SerializeField] private int _dropBoxAtTargetForce = 300;
+    [SerializeField] private int _dropBoxWhenBlockedForce = 250;
     [SerializeField] private float _blockingBoxDistance = 2f;
     
     [Header("State Machine")]
@@ -139,8 +140,10 @@ public class CharacterController : MonoBehaviour
 
         var dropDirection = !_isBlocked ? _movingLeft ? Vector2.left : Vector2.right :
                                                  _movingLeft ? Vector2.right : Vector2.left;
+
+        var dropForce = _isBlocked ? _dropBoxWhenBlockedForce : _dropBoxAtTargetForce;
         
-        _collidedBox.OnDropped(dropDirection * _dropBoxForce, !_isBlocked);
+        _collidedBox.OnDropped(dropDirection * dropForce, !_isBlocked);
         
         if (!_isBlocked)
         {
