@@ -60,20 +60,21 @@ namespace Spawning
 
         private void SpawnObject()
         {
-            var obj = GetRandomObjectFromPool();
+            var objectToSpawn = GetRandomObjectFromPool();
 
-            if (!obj)
+            if (!objectToSpawn)
             {
                 Debug.Log("No valid object available in the pool");
                 return;
             }
 
             var randomSpawnPoint = GetRandomSpawnPoint();
-            obj.transform.SetPositionAndRotation(randomSpawnPoint.position, randomSpawnPoint.rotation);
-            obj.transform.SetParent(_spawnedObjectsParent);
-            obj.SetActive(true);
+            
+            objectToSpawn.transform.SetPositionAndRotation(randomSpawnPoint.position, randomSpawnPoint.rotation);
+            objectToSpawn.transform.SetParent(_spawnedObjectsParent);
+            objectToSpawn.SetActive(true);
         
-            if (obj.TryGetComponent<Rigidbody2D>(out var rigidBody))
+            if (objectToSpawn.TryGetComponent<Rigidbody2D>(out var rigidBody))
             {
                 Vector2 forceDirection = randomSpawnPoint.right;
                 var force = Random.Range(0, _randomMaxForce);

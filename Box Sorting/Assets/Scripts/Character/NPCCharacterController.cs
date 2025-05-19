@@ -80,18 +80,23 @@ namespace Character
                 _onStateChanged?.Invoke(newState);
             };
         
-            _stateMachine.TryChangeState(_defaultState.Name);
+            _stateMachine.ForceChangeState(_defaultState.Name);
         }
 
         private void Update()
         {
             _stateMachine.Update(Time.deltaTime);
 
-            if (!_flagCollision)
+            if (_flagCollision)
             {
-                return;
+                CheckFlagCollisionTimer();
             }
-            
+        }
+
+        private void CheckFlagCollisionTimer()
+        {
+            // Regular checks if the character is at the flag. This is for situations when the character acquires a box
+            // when they are already standing at the flag, and the OnTriggerEnter check has already been completed
             _flagCollisionStayTimer += Time.deltaTime;
             
             if (_flagCollisionStayTimer >= 1 / _flagCollisionChecksPerSecond)
@@ -109,12 +114,13 @@ namespace Character
             }
         
             // Check if the NPC has reached the target point, which should only happen if the target box has despawned
-            // This prevents them getting stuck
+            // This prevents them from getting stuck
             if (Mathf.Abs(transform.position.x - _targetPosition.x) < _stuckDistance)
             {
                 _stateMachine.TryChangeState(StateName.SearchForBoxes);
             }
 
+            // For when a carried box despawns
             if (_currentState == StateName.WalkWithBox && !_collidedBox.gameObject.activeInHierarchy)
             {
                 _stateMachine.TryChangeState(StateName.SearchForBoxes);
@@ -126,7 +132,7 @@ namespace Character
 
         public void SetMoveTarget(Vector2 targetPosition)
         {
-            _targetPosition = new Vector2(targetPosition.x, 0); // Keep character at Y pos 0.
+            _targetPosition = new Vector2(targetPosition.x, 0); // Always keep character at Y position 0
         }
 
         public void MoveToTarget()
@@ -138,6 +144,7 @@ namespace Character
 
         public void Reset()
         {
+            // Used when the reset button on the HUD is pressed
             _collidedBox = null;
             _targetPosition = Vector2.zero;
             _stateMachine.ForceChangeState(StateName.SearchForBoxes);
@@ -165,7 +172,8 @@ namespace Character
             var targetDirection = _movingLeft ? Vector2.left : Vector2.right;
             var distanceToBlockingBox = Vector2.Distance(blockingBoxPosition, transform.position);
         
-            // TODO: Add comment
+            // Check if the box is closer than the specified blocking distance, and is in the same direction as
+            // the character is currently moving
             return distanceToBlockingBox < _blockingBoxDistance &&
                    Vector2.Dot(blockingBoxPosition - (Vector2)transform.position, targetDirection) > 0;
         }
@@ -178,6 +186,8 @@ namespace Character
                 return;
             }
             
+            // Parent the box to the character, depending on what colour the box is. The character has a transform
+            // on each side to hold the carried box, because the sprite is flipped based on the movement direction.
             _collidedBox.transform.SetParent(_collidedBox.Colour == BoxColour.Blue ? _blueBoxParent : _redBoxParent);
             _collidedBox.transform.SetLocalPositionAndRotation(Vector3.zero, _collidedBox.transform.rotation);
         
@@ -186,12 +196,14 @@ namespace Character
     
         public void DropBoxAtTarget()
         {
+            // Drop in the direction the character is moving
             var angle = _movingLeft ? -_dropBoxAngleDegrees : _dropBoxAngleDegrees;
             ReleaseBox(angle, _dropBoxForce);
         }
     
         public void ThrowBox()
         {
+            // Throw in the direction the character is moving
             var angle = _movingLeft ? -_throwBoxAngleDegrees : _throwBoxAngleDegrees;
             ReleaseBox(angle, _throwBoxForce);
         }
@@ -204,7 +216,7 @@ namespace Character
                 return;
             }
         
-            _collidedBox.SetOriginalParent();
+            _collidedBox.SetOriginalParent(); // For hierarchy management purposes
         
             var releaseDirection = _movingLeft ? Vector2.left : Vector2.right;
             releaseDirection = Quaternion.Euler(0, 0, angle) * releaseDirection;
@@ -215,6 +227,7 @@ namespace Character
 
         private void OnCollisionEnter2D(Collision2D other)
         {
+            // Check for box collision in a correct state
             if (!other.gameObject.CompareTag("Box") ||
                 (_currentState != StateName.SearchForBoxes && _currentState != StateName.WalkToBox) 
                 || !other.gameObject.TryGetComponent<BoxController>(out var box))
@@ -223,6 +236,8 @@ namespace Character
             }
         
             _collidedBox = box;
+            
+            // Set the move target to the correct flag, based on the colour of the box
             SetMoveTarget(_collidedBox.Colour == BoxColour.Blue ? _blueFlag.position : _redFlag.position);
             
             if (_stateMachine.TryChangeState(StateName.PickUpBox))
