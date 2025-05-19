@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f67a82e91aa6b784fbeab774b99183a1
+guid: 6c9159f31d4ea8249a75a1232e5c1fba
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4056996815742996637
-    second: panel_brown_skinny_0
+      213: 7572898546484051644
+    second: round_damaged_brown_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,12 +113,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: panel_brown_skinny_0
+      name: round_damaged_brown_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1024
+        width: 256
         height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 36f6fb614e6a2b7c0800000000000000
-      internalID: -4056996815742996637
+      spriteID: cbef047ea17581960800000000000000
+      internalID: 7572898546484051644
       vertices: []
       indices: 
       edges: []
@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      round_damaged_brown_0: 7572898546484051644
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

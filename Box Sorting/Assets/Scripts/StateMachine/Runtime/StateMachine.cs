@@ -24,7 +24,7 @@ public class StateMachine
         _states.Add(state.Name, state);
     }
 
-    private State GetState(StateName key) //TODO: Do we need this method?
+    private State GetState(StateName key)
     {
         if (_states.TryGetValue(key, out var state))
         {
@@ -33,6 +33,11 @@ public class StateMachine
         
         Debug.LogError($"State not found: {key}");
         return null;
+    }
+    
+    public void Update(float deltaTime)
+    {
+        _currentState.OnUpdate(deltaTime);
     }
 
     public bool TryChangeState(StateName stateName)
@@ -49,24 +54,42 @@ public class StateMachine
         {
             if (!newState.CanEnter(_currentState))
             {
-                Debug.LogError($"Cannot Enter {newState.Name} from {_currentState}"); // TODO: Change to normal log or remove
+                Debug.Log($"Cannot Enter {newState.Name} from {_currentState}");
                 return false;
             }
             
             _currentState.OnExit();
         }
         
-        Debug.Log($"Change state to <color=green>{newState.Name}</color> from <color=red>{_currentState}</color>"); 
+        Debug.Log($"Change state to <color=green>{newState.Name}</color> from <color=red>{(_currentState ? _currentState.Name : "None")}</color>"); 
         
+        SetNewState(newState);
+        return true;
+    }
+    
+    public void ForceChageState(StateName stateName)
+    {
+        var newState = GetState(stateName);
+        
+        if (!newState)
+        {
+            Debug.LogError("State not valid");
+            return;
+        }
+
+        if (_currentState)
+        {
+            _currentState.OnExit();
+        }
+
+        SetNewState(newState);
+    }
+
+    private void SetNewState(State newState)
+    {
         OnStateChanged?.Invoke(newState.Name);
         _previousState = _currentState;
         _currentState = newState;
         _currentState.OnEnter();
-        return true;
-    }
-
-    public void Update(float deltaTime)
-    {
-        _currentState.OnUpdate(deltaTime);
     }
 }

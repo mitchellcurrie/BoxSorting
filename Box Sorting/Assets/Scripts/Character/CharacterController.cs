@@ -12,6 +12,7 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private float _movementSpeed = 2;
     [SerializeField] private int _dropBoxForce = 300;
     [SerializeField] private int _throwBoxForce = 400;
+    [SerializeField] private int _dropBoxAngleDegrees = 45;
     [SerializeField] private int _throwBoxAngleDegrees = 60;
     [SerializeField] private float _blockingBoxDistance = 2f;
     [SerializeField] private float _stuckDistance = 0.1f;
@@ -108,6 +109,14 @@ public class CharacterController : MonoBehaviour
         _animator.SetBool(WALK_ANIM_BOOL, true);
     }
 
+    public void Reset()
+    {
+        _collidedBox = null;
+        _targetPosition = Vector2.zero;
+        _stateMachine.ForceChageState(StateName.SearchForBoxes);
+        transform.position = Vector2.zero;
+    }
+
     public void FlipLookDirection()
     {
         _spriteRenderer.flipX = !_spriteRenderer.flipX;
@@ -144,22 +153,17 @@ public class CharacterController : MonoBehaviour
     
     public void DropBoxAtTarget()
     {
-        var dropDirection = _movingLeft ? Vector2.left : Vector2.right;
-        ReleaseBox(dropDirection *_dropBoxForce);
+        var angle = _movingLeft ? -_dropBoxAngleDegrees : _dropBoxAngleDegrees;
+        ReleaseBox(angle, _dropBoxForce);
     }
     
     public void ThrowBox()
     {
-        var throwDirection = _movingLeft ? Vector2.left : Vector2.right;
         var angle = _movingLeft ? -_throwBoxAngleDegrees : _throwBoxAngleDegrees;
-        throwDirection = Quaternion.Euler(0, 0, angle) * throwDirection;
-        
-        Debug.Log($"Throw Direction: {throwDirection}   --   Angle: {_throwBoxAngleDegrees}");
-        
-        ReleaseBox(throwDirection * _throwBoxForce);
+        ReleaseBox(angle, _throwBoxForce);
     }
 
-    private void ReleaseBox(Vector2 releaseForce)
+    private void ReleaseBox(float angle, float force)
     {
         if (!_collidedBox)
         {
@@ -168,13 +172,12 @@ public class CharacterController : MonoBehaviour
         }
         
         _collidedBox.transform.SetParent(null);
-
-        var dropDirection = _movingLeft ? Vector2.left : Vector2.right;
-        _collidedBox.OnReleased(releaseForce);
         
+        var releaseDirection = _movingLeft ? Vector2.left : Vector2.right;
+        releaseDirection = Quaternion.Euler(0, 0, angle) * releaseDirection;
+        
+        _collidedBox.OnReleased(releaseDirection * force);
         _collidedBox = null;
-        
-        StopAllMovingAnimations();
     }
 
     private void OnCollisionEnter2D(Collision2D other)

@@ -151,9 +151,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _movementSpeed: 2
-  _dropBoxForce: 250
-  _throwBoxForce: 350
-  _throwBoxAngleDegrees: 60
+  _dropBoxForce: 300
+  _throwBoxForce: 400
+  _dropBoxAngleDegrees: 60
+  _throwBoxAngleDegrees: 70
   _blockingBoxDistance: 3
   _stuckDistance: 0.1
   _defaultState: {fileID: 2765726473741457763}
