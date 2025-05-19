@@ -26,6 +26,7 @@ namespace Spawning
             _spawnPoints = GetComponentsInChildren<Transform>();
             _spawnedObjectsParent = new GameObject(SPAWNED_OBJECTS_PARENT_NAME).transform;
             _spawnedObjectsParent.SetParent(transform);
+            
             InstantiateObjectPool();
             SetRandomSpawnRate();
         }
@@ -34,13 +35,14 @@ namespace Spawning
         {
             var numberOfEachObject = _maximumNumberOfObjects / _spawnPool.Count;
 
+            // Instantiate all objects and set them to inactive until they are required
             foreach (var prefab in _spawnPool)
             {
                 for (var i = 0; i < numberOfEachObject; i++)
                 {
                     var newObject = Instantiate(prefab, transform.position, Quaternion.identity, _spawnedObjectsParent);
-                    _objectPool.Add(newObject);
                     newObject.SetActive(false);
+                    _objectPool.Add(newObject);
                 }
             }
         }
@@ -58,11 +60,11 @@ namespace Spawning
 
         private void SpawnObject()
         {
-            var obj = GetObjectFromPool();
+            var obj = GetRandomObjectFromPool();
 
             if (!obj)
             {
-                Debug.Log("No valid object available in the pool to spawn");
+                Debug.Log("No valid object available in the pool");
                 return;
             }
 
@@ -83,6 +85,7 @@ namespace Spawning
 
         public void ResetObjects()
         {
+            // Used when the reset button on the HUD is pressed
             foreach (var obj in _objectPool)
             {
                 obj.SetActive(false);
@@ -90,11 +93,11 @@ namespace Spawning
             }
         }
 
-        private GameObject GetObjectFromPool()
+        private GameObject GetRandomObjectFromPool()
         {
             var randomIndices = Enumerable.Range(0, _objectPool.Count).OrderBy(_ => Random.value);
             return randomIndices.Select(index => _objectPool[index])
-                .FirstOrDefault(obj => obj && !obj.activeInHierarchy);
+                                .FirstOrDefault(obj => obj && !obj.activeInHierarchy);
         }
 
         private Transform GetRandomSpawnPoint()

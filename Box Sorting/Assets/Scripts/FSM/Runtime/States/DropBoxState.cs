@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace FSM.Runtime.States
 {
+    // State for dropping the box into the correct target zone
     public class DropBoxState : State
     {
         [SerializeField] private float _delayAfterDrop = 0.2f;

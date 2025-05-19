@@ -22,6 +22,7 @@ namespace FSM.Runtime.States
         
         public virtual bool CanEnter(State currentState)
         {
+            // Can only enter a state if the current state is in the specified list of states it can transition from
             return _canTransitionFrom.Contains(currentState);
         }
     

@@ -24,6 +24,7 @@ namespace FSM.Runtime.States
         
             if (_flipTimer >= _currentFlipTime)
             {
+                // At random intervals, flip the character's sprite to appear as though they are searching for boxes
                 _npcCharacterController.FlipLookDirection();
                 SetRandomFlipTime();
                 _flipTimer = 0;

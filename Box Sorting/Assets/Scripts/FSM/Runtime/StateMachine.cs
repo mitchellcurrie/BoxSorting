@@ -13,16 +13,16 @@ namespace FSM.Runtime
     
         private readonly Dictionary<StateName, State> _states = new();
         private readonly NpcCharacterController _npcCharacterController;
-        private readonly bool _showStateChangeLogs;
+        private readonly bool _showDebugStateChangeLogs;
         private State _currentState;
 
-        public StateMachine(NpcCharacterController npcCharacterController, bool showStateChangeLogs)
+        public StateMachine(NpcCharacterController npcCharacterController, bool showDebugStateChangeLogs)
         {
-            _showStateChangeLogs = showStateChangeLogs;
+            _showDebugStateChangeLogs = showDebugStateChangeLogs;
             _npcCharacterController = npcCharacterController;
         }
     
-        public void Add(State state)
+        public void AddState(State state)
         {
             state.Init(this, _npcCharacterController);
             _states.Add(state.Name, state);
@@ -68,7 +68,7 @@ namespace FSM.Runtime
                 _currentState.OnExit();
             }
 
-            if (_showStateChangeLogs)
+            if (_showDebugStateChangeLogs)
             {
                 Debug.Log($"Change state to <color=green>{newState.Name}</color> from <color=red>{(_currentState ? _currentState.Name : "None")}</color>"); 
             }

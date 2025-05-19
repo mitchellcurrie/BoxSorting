@@ -34,7 +34,7 @@ namespace Character
         [SerializeField] private UnityEvent<StateName> _onStateChanged = new();
     
         [Header("Debug")]
-        [SerializeField] private bool _showStateChangeLogs;
+        [SerializeField] private bool _showDebugStateChangeLogs;
     
         [Header("Setup")]
         [SerializeField] private Transform _blueBoxParent;
@@ -67,11 +67,11 @@ namespace Character
     
         private void InitStateMachine()
         {
-            _stateMachine = new StateMachine(this, _showStateChangeLogs);
+            _stateMachine = new StateMachine(this, _showDebugStateChangeLogs);
 
             foreach (var state in _states)
             {
-                _stateMachine.Add(state);
+                _stateMachine.AddState(state);
             }
         
             _stateMachine.OnStateChanged += newState =>

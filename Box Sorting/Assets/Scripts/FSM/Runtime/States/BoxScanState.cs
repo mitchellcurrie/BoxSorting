@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace FSM.Runtime.States
 {
+    // Base class for states that need to know about surrounding boxes
     public abstract class BoxScanState : State
     {
         [SerializeField] protected float _scansPerSecond = 4f;
@@ -24,6 +25,8 @@ namespace FSM.Runtime.States
             {
                 ScanForBoxes(_scanDirection);
                 _scanTimer = 0;
+                
+                // Alternate scanning between left and right
                 _scanDirection = _scanDirection == Vector2.left ? Vector2.right : Vector2.left;
             }
         }

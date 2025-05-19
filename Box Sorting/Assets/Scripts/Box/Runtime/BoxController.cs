@@ -35,10 +35,23 @@ namespace Box.Runtime
         {
             _spawnerParent = transform.parent;
         }
-
+        
+        private void OnEnable()
+        {
+            // Sets values to default when the box is spawned by the object pool
+            gameObject.layer = LayerMask.NameToLayer(DEFAULT_LAYER);
+            _renderer.color = _colour;
+            _inTargetZone = false;
+        }
+        
+        public void SetOriginalParent()
+        {
+            transform.parent = _spawnerParent;
+        }
+        
         public void OnPickedUp()
         {
-            // Stop the effects of gravity and any existing velocity
+            // Stop the effects of gravity, any existing velocity, and prevent character raycasts colliding
             _rigidbody.bodyType = RigidbodyType2D.Kinematic;
             _rigidbody.linearVelocity = Vector2.zero;
             _rigidbody.angularVelocity = 0f;
@@ -49,20 +62,26 @@ namespace Box.Runtime
         {
             // Re-enable effects of gravity
             _rigidbody.bodyType = RigidbodyType2D.Dynamic;
-        
-            // Set to ignore raycasts so the NPC character doesn't try and pick it up again // TODO: Elaborate here after changes
-            gameObject.layer = LayerMask.NameToLayer(IGNORE_RAYCAST_LAYER);
+            
+            // Add a random torque to rotate the released box and add the dropping / throwing force
             _rigidbody.AddTorque(Random.Range(-_rotationMaxForce, _rotationMaxForce));
             _rigidbody.AddForce(releaseForce);
             
             StartCoroutine(DelayedSetLayerToDefault());
         }
-
-        public void SetOriginalParent()
+        
+        private IEnumerator DelayedSetLayerToDefault()
         {
-            transform.parent = _spawnerParent;
+            yield return new WaitForSeconds(_ignoreTimeAfterDropped);
+            
+            if (!_inTargetZone)
+            {
+                // If the box has been released and is not in the target zone, set the layer back to default to allow
+                // the NPC to see it
+                gameObject.layer = LayerMask.NameToLayer(DEFAULT_LAYER);
+            }
         }
-    
+        
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.gameObject.CompareTag("Target"))
@@ -70,25 +89,17 @@ namespace Box.Runtime
                 gameObject.layer = LayerMask.NameToLayer(IGNORE_RAYCAST_LAYER);
                 _inTargetZone = true;
                 
+                // Box has reached the target. Start the despawn coroutine
                 StartCoroutine(DelayedDespawnRoutine());
             }
         
             if (other.gameObject.CompareTag("SpawnArea"))
             {
+                // Adds a random rotation to boxes when they are spawned at the top of the screen
                 _rigidbody.AddTorque(Random.Range(-_rotationMaxForce, _rotationMaxForce));
             }
         }
-    
-        private IEnumerator DelayedSetLayerToDefault()
-        {
-            yield return new WaitForSeconds(_ignoreTimeAfterDropped);
-            
-            if (!_inTargetZone)
-            {
-                gameObject.layer = LayerMask.NameToLayer(DEFAULT_LAYER);
-            }
-        }
-
+        
         private IEnumerator DelayedDespawnRoutine()
         {
             yield return new WaitForSeconds(_timeUntilFade);
@@ -107,13 +118,6 @@ namespace Box.Runtime
         
             _renderer.color = new Color(_colour.r, _colour.g, _colour.b, 0);
             gameObject.SetActive(false);
-        }
-    
-        private void OnEnable()
-        {
-            gameObject.layer = LayerMask.NameToLayer(DEFAULT_LAYER);
-            _renderer.color = _colour;
-            _inTargetZone = false;
         }
     }
 }
