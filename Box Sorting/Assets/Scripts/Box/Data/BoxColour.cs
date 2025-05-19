@@ -1,5 +1,9 @@
-public enum BoxColour
+namespace Box.Data
 {
-    Blue,
-    Red
+    public enum BoxColour
+    {
+        Blue,
+        Red
+    }
 }
+
