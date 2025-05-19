@@ -9,18 +9,18 @@ public class StateMachine
     public Action<StateName> OnStateChanged;
     
     private readonly Dictionary<StateName, State> _states = new();
-    private readonly CharacterController _characterController;
+    private readonly NPCCharacterController _npcCharacterController;
     private State _currentState;
     private State _previousState;
 
-    public StateMachine(CharacterController characterController)
+    public StateMachine(NPCCharacterController npcCharacterController)
     {
-        _characterController = characterController;
+        _npcCharacterController = npcCharacterController;
     }
     
     public void Add(State state)
     {
-        state.Init(this, _characterController);
+        state.Init(this, _npcCharacterController);
         _states.Add(state.Name, state);
     }
 

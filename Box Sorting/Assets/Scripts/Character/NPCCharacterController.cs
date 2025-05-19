@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
-public class CharacterController : MonoBehaviour
+public class NPCCharacterController : MonoBehaviour
 {
     private static readonly int WALK_ANIM_BOOL = Animator.StringToHash("Walk");
     private static readonly int HOLD_ANIM_BOOL = Animator.StringToHash("Hold");

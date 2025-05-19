@@ -7,12 +7,12 @@ public abstract class State : MonoBehaviour
     [SerializeField] private List<State> _canTransitionFrom = new();
     
     protected StateMachine _stateMachine;
-    protected CharacterController _characterController;
+    protected NPCCharacterController _npcCharacterController;
     
-    public virtual void Init(StateMachine stateMachine, CharacterController characterController)
+    public virtual void Init(StateMachine stateMachine, NPCCharacterController npcCharacterController)
     {
         _stateMachine = stateMachine;
-        _characterController = characterController;
+        _npcCharacterController = npcCharacterController;
     }
 
     public virtual bool CanEnter(State currentState)

@@ -10,7 +10,7 @@ public class SearchForBoxesState : BoxScanState
     public override void OnEnter()
     {
         base.OnEnter();
-        _characterController.StopAllMovingAnimations();
+        _npcCharacterController.StopAllMovingAnimations();
         SetRandomFlipTime();
     }
 
@@ -22,7 +22,7 @@ public class SearchForBoxesState : BoxScanState
         
         if (_flipTimer >= _currentFlipTime)
         {
-            _characterController.FlipLookDirection();
+            _npcCharacterController.FlipLookDirection();
             SetRandomFlipTime();
             _flipTimer = 0;
         }
@@ -30,7 +30,7 @@ public class SearchForBoxesState : BoxScanState
 
     protected override void OnBoxFound(RaycastHit2D hitBox)
     {
-        _characterController.SetMoveTarget(hitBox.point);
+        _npcCharacterController.SetMoveTarget(hitBox.point);
         _stateMachine.TryChangeState(StateName.WalkToBox);
     }
     

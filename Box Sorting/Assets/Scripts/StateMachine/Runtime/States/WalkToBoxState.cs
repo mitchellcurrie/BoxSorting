@@ -2,11 +2,11 @@ public class WalkToBoxState : State
 {
     public override void OnEnter()
     { 
-        _characterController.MoveToTarget();
+        _npcCharacterController.MoveToTarget();
     }
 
     public override void OnExit()
     {
-        _characterController.StopWalkAnimation();
+        _npcCharacterController.StopWalkAnimation();
     }
 }

@@ -7,7 +7,7 @@ public class ThrowBoxState : State
     
     public override void OnEnter()
     {
-       _characterController.ThrowBox();
+       _npcCharacterController.ThrowBox();
        StartCoroutine(DelayedChangeState());
     }
 

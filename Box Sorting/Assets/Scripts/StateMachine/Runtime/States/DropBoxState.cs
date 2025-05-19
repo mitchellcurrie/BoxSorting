@@ -7,7 +7,7 @@ public class DropBoxState : State
     
     public override void OnEnter()
     {
-       _characterController.DropBoxAtTarget();
+       _npcCharacterController.DropBoxAtTarget();
        StartCoroutine(DelayedChangeState());
     }
 
