@@ -12,7 +12,7 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField] private int _randomMaxForce = 50;
     
     private const string SPAWNED_OBJECTS_PARENT_NAME = "Spawned Objects Parent";
-    private List<GameObject> _objectPool = new();
+    private readonly List<GameObject> _objectPool = new();
     private Transform[] _spawnTransforms = Array.Empty<Transform>();
     private Transform _spawnedObjectsParent;
     private float _spawnTimer;
@@ -51,7 +51,7 @@ public class ObjectSpawner : MonoBehaviour
         }
     }
 
-    public void SpawnObject()
+    private void SpawnObject()
     {
         var obj = GetObjectFromPool();
 
