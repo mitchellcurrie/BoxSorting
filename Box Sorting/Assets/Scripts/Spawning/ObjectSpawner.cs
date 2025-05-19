@@ -10,7 +10,7 @@ namespace Spawning
     {
         [SerializeField] private List<GameObject> _spawnPool = new();
         [SerializeField] private int _maximumNumberOfObjects = 20;
-        [SerializeField] private float _spawnRateSeconds = 5f;
+        [SerializeField] private Vector2 _spawnRateMinMaxSeconds;
         [SerializeField] private int _randomMaxForce = 50;
     
         private const string SPAWNED_OBJECTS_PARENT_NAME = "Spawned Objects Parent";
@@ -19,6 +19,7 @@ namespace Spawning
         private Transform[] _spawnPoints = Array.Empty<Transform>();
         private Transform _spawnedObjectsParent;
         private float _spawnTimer;
+        private float _spawnRate;
 
         private void Start()
         {
@@ -26,6 +27,7 @@ namespace Spawning
             _spawnedObjectsParent = new GameObject(SPAWNED_OBJECTS_PARENT_NAME).transform;
             _spawnedObjectsParent.SetParent(transform);
             InstantiateObjectPool();
+            SetRandomSpawnRate();
         }
 
         private void InstantiateObjectPool()
@@ -47,7 +49,7 @@ namespace Spawning
         {
             _spawnTimer += Time.deltaTime;
 
-            if (_spawnTimer >= _spawnRateSeconds)
+            if (_spawnTimer >= _spawnRate)
             {
                 SpawnObject();
                 _spawnTimer = 0;
@@ -75,6 +77,8 @@ namespace Spawning
                 var force = Random.Range(0, _randomMaxForce);
                 rigidBody.AddForce(forceDirection * force);
             }
+
+            SetRandomSpawnRate();
         }
 
         public void ResetObjects()
@@ -96,6 +100,11 @@ namespace Spawning
         private Transform GetRandomSpawnPoint()
         {
             return _spawnPoints[Random.Range(0, _spawnPoints.Length)];
+        }
+
+        private void SetRandomSpawnRate()
+        {
+            _spawnRate = Random.Range(_spawnRateMinMaxSeconds.x, _spawnRateMinMaxSeconds.y);
         }
     }
 }
