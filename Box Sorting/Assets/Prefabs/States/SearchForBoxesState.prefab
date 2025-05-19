@@ -46,5 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Name>k__BackingField: 0
   _canTransitionFrom: []
-  _searchesPerSecond: 4
-  _flipLookDirectionMinMaxSeconds: {x: 0.5, y: 5}
+  _scansPerSecond: 4
+  _flipLookDirectionMinMaxSeconds: {x: 0.5, y: 2}
