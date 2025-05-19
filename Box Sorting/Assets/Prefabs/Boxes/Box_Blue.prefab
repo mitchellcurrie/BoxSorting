@@ -49,9 +49,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Colour>k__BackingField: 0
   _rotationMaxForce: 30
-  _timeUntilFade: 5
-  _fadeDuration: 2
-  _ignoreTimeAfterDropped: 1.5
+  _timeUntilFade: 4
+  _fadeDuration: 1.5
+  _ignoreTimeAfterDropped: 1
 --- !u!212 &206559722820945258
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -145,7 +145,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 2, y: 2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -165,7 +165,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 0.5
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1

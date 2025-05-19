@@ -45,3 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Name>k__BackingField: 3
+  _canTransitionFrom: []
+  _scansPerSecond: 10

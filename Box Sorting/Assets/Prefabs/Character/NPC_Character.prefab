@@ -152,10 +152,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movementSpeed: 2
   _stuckDistance: 0.1
-  _dropBoxForce: 300
-  _throwBoxForce: 400
+  _dropBoxForce: 150
+  _throwBoxForce: 250
   _dropBoxAngleDegrees: 60
-  _throwBoxAngleDegrees: 70
+  _throwBoxAngleDegrees: 75
   _blockingBoxDistance: 3
   _flagCollisionChecksPerSecond: 5
   _defaultState: {fileID: 2765726473741457763}
