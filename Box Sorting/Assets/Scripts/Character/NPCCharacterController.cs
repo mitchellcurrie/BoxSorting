@@ -204,7 +204,7 @@ namespace Character
                 return;
             }
         
-            _collidedBox.transform.SetParent(null);
+            _collidedBox.SetOriginalParent();
         
             var releaseDirection = _movingLeft ? Vector2.left : Vector2.right;
             releaseDirection = Quaternion.Euler(0, 0, angle) * releaseDirection;

@@ -17,7 +17,8 @@ namespace Box.Runtime
     
         private const string IGNORE_RAYCAST_LAYER = "Ignore Raycast";
         private const string DEFAULT_LAYER = "Default";
-    
+
+        private Transform _spawnerParent;
         private Rigidbody2D _rigidbody; 
         private SpriteRenderer _renderer;
         private Color _colour;
@@ -28,6 +29,11 @@ namespace Box.Runtime
             _rigidbody = GetComponent<Rigidbody2D>();
             _renderer = GetComponent<SpriteRenderer>();
             _colour = _renderer.color;
+        }
+
+        private void Start()
+        {
+            _spawnerParent = transform.parent;
         }
 
         public void OnPickedUp()
@@ -50,6 +56,11 @@ namespace Box.Runtime
             _rigidbody.AddForce(releaseForce);
             
             StartCoroutine(DelayedSetLayerToDefault());
+        }
+
+        public void SetOriginalParent()
+        {
+            transform.parent = _spawnerParent;
         }
     
         private void OnTriggerEnter2D(Collider2D other)
