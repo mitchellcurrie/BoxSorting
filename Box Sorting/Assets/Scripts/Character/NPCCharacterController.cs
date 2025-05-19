@@ -24,6 +24,9 @@ public class NPCCharacterController : MonoBehaviour
     [Header("Events")]
     [SerializeField] UnityEvent<StateName> _onStateChanged;
     
+    [Header("Debug")]
+    [SerializeField] private bool _showStateChangeLogs;
+    
     [Header("Setup")]
     [SerializeField] private Transform _blueBoxParent;
     [SerializeField] private Transform _redBoxParent;
@@ -53,7 +56,7 @@ public class NPCCharacterController : MonoBehaviour
     
     private void InitStateMachine()
     {
-        _stateMachine = new StateMachine(this);
+        _stateMachine = new StateMachine(this, _showStateChangeLogs);
 
         foreach (var state in _states)
         {

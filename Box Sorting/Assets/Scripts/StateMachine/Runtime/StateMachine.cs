@@ -12,10 +12,12 @@ public class StateMachine
     private readonly NPCCharacterController _npcCharacterController;
     private State _currentState;
     private State _previousState;
+    private bool _showStateChangeLogs;
 
-    public StateMachine(NPCCharacterController npcCharacterController)
+    public StateMachine(NPCCharacterController npcCharacterController, bool showStateChangeLogs)
     {
         _npcCharacterController = npcCharacterController;
+        _showStateChangeLogs = showStateChangeLogs;
     }
     
     public void Add(State state)
@@ -60,8 +62,11 @@ public class StateMachine
             
             _currentState.OnExit();
         }
-        
-        Debug.Log($"Change state to <color=green>{newState.Name}</color> from <color=red>{(_currentState ? _currentState.Name : "None")}</color>"); 
+
+        if (_showStateChangeLogs)
+        {
+            Debug.Log($"Change state to <color=green>{newState.Name}</color> from <color=red>{(_currentState ? _currentState.Name : "None")}</color>"); 
+        }
         
         SetNewState(newState);
         return true;

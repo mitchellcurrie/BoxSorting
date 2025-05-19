@@ -11,13 +11,17 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField] private float _spawnRateSeconds = 5f;
     [SerializeField] private int _randomMaxForce = 50;
     
+    private const string SPAWNED_OBJECTS_PARENT_NAME = "Spawned Objects Parent";
     private List<GameObject> _objectPool = new();
     private Transform[] _spawnTransforms = Array.Empty<Transform>();
+    private Transform _spawnedObjectsParent;
     private float _spawnTimer;
 
     private void Start()
     {
         _spawnTransforms = GetComponentsInChildren<Transform>();
+        _spawnedObjectsParent = new GameObject(SPAWNED_OBJECTS_PARENT_NAME).transform;
+        _spawnedObjectsParent.SetParent(transform);
         InstantiateObjectPool();
     }
 
@@ -29,7 +33,7 @@ public class ObjectSpawner : MonoBehaviour
         {
             for (var i = 0; i < numberOfEachObject; i++)
             {
-                var newObject = Instantiate(prefab, transform.position, Quaternion.identity, transform);
+                var newObject = Instantiate(prefab, transform.position, Quaternion.identity, _spawnedObjectsParent);
                 _objectPool.Add(newObject);
                 newObject.SetActive(false);
             }
@@ -59,7 +63,7 @@ public class ObjectSpawner : MonoBehaviour
 
         var randomSpawnLocation = GetRandomSpawnTransform();
         obj.transform.SetPositionAndRotation(randomSpawnLocation.position, randomSpawnLocation.rotation);
-        obj.transform.SetParent(transform);
+        obj.transform.SetParent(_spawnedObjectsParent);
         obj.SetActive(true);
         
         if (obj.TryGetComponent<Rigidbody2D>(out var rigidBody))
@@ -75,7 +79,7 @@ public class ObjectSpawner : MonoBehaviour
         foreach (var obj in _objectPool)
         {
             obj.SetActive(false);
-            obj.transform.SetParent(transform);
+            obj.transform.SetParent(_spawnedObjectsParent);
         }
     }
 
