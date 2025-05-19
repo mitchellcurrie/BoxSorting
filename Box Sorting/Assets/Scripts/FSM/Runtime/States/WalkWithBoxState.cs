@@ -8,20 +8,20 @@ namespace FSM.Runtime.States
         public override void OnEnter()
         {
             base.OnEnter();
-            _npcCharacterController.MoveToTarget();
+            _npcController.MoveToTarget();
         }
 
         public override void OnExit()
         {
             base.OnExit();
-            _npcCharacterController.StopAllMovingAnimations();
+            _npcController.StopAllMovingAnimations();
         }
     
         protected override void OnBoxFound(RaycastHit2D hitBox)
         {
             base.OnBoxFound(hitBox);
             
-            if (_npcCharacterController.IsBoxBlockingTarget(hitBox.point))
+            if (_npcController.IsBoxBlockingTarget(hitBox.point))
             {
                 _stateMachine.TryChangeState(StateName.ThrowBox);
             }

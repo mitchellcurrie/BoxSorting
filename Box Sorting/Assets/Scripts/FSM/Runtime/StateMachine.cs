@@ -12,19 +12,19 @@ namespace FSM.Runtime
         public Action<StateName> OnStateChanged;
     
         private readonly Dictionary<StateName, State> _states = new();
-        private readonly NpcCharacterController _npcCharacterController;
+        private readonly NpcController _npcController;
         private readonly bool _showDebugStateChangeLogs;
         private State _currentState;
 
-        public StateMachine(NpcCharacterController npcCharacterController, bool showDebugStateChangeLogs)
+        public StateMachine(NpcController npcController, bool showDebugStateChangeLogs)
         {
             _showDebugStateChangeLogs = showDebugStateChangeLogs;
-            _npcCharacterController = npcCharacterController;
+            _npcController = npcController;
         }
     
         public void AddState(State state)
         {
-            state.Init(this, _npcCharacterController);
+            state.Init(this, _npcController);
             _states.Add(state.Name, state);
         }
 

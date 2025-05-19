@@ -12,7 +12,7 @@ namespace FSM.Runtime.States
         public override void OnEnter()
         {
             base.OnEnter();
-            _npcCharacterController.DropBoxAtTarget();
+            _npcController.DropBoxAtTarget();
             StartCoroutine(DelayedChangeState());
         }
 

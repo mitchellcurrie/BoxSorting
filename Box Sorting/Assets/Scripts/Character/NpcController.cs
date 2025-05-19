@@ -11,7 +11,7 @@ namespace Character
 {
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(SpriteRenderer))]
-    public class NpcCharacterController : MonoBehaviour
+    public class NpcController : MonoBehaviour
     {
         private static readonly int WALK_ANIM_BOOL = Animator.StringToHash("Walk");
         private static readonly int HOLD_ANIM_BOOL = Animator.StringToHash("Hold");

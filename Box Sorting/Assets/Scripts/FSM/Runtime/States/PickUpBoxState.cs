@@ -7,7 +7,7 @@ namespace FSM.Runtime.States
         public override void OnEnter()
         {
             base.OnEnter();
-            _npcCharacterController.PickUpBox();
+            _npcController.PickUpBox();
             _stateMachine.TryChangeState(StateName.WalkWithBox);
         }
     }

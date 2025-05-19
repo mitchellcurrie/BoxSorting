@@ -12,12 +12,12 @@ namespace FSM.Runtime.States
         [SerializeField] private List<State> _canTransitionFrom = new();
     
         protected StateMachine _stateMachine;
-        protected NpcCharacterController _npcCharacterController;
+        protected NpcController _npcController;
     
-        public virtual void Init(StateMachine stateMachine, NpcCharacterController npcCharacterController)
+        public virtual void Init(StateMachine stateMachine, NpcController npcController)
         {
             _stateMachine = stateMachine;
-            _npcCharacterController = npcCharacterController;
+            _npcController = npcController;
         }
         
         public virtual bool CanEnter(State currentState)

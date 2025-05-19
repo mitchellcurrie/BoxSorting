@@ -13,7 +13,7 @@ namespace FSM.Runtime.States
         public override void OnEnter()
         {
             base.OnEnter();
-            _npcCharacterController.StopAllMovingAnimations();
+            _npcController.StopAllMovingAnimations();
             SetRandomFlipTime();
         }
 
@@ -25,7 +25,7 @@ namespace FSM.Runtime.States
             if (_flipTimer >= _currentFlipTime)
             {
                 // At random intervals, flip the character's sprite to appear as though they are searching for boxes
-                _npcCharacterController.FlipLookDirection();
+                _npcController.FlipLookDirection();
                 SetRandomFlipTime();
                 _flipTimer = 0;
             }
@@ -34,7 +34,7 @@ namespace FSM.Runtime.States
         protected override void OnBoxFound(RaycastHit2D hitBox)
         {
             base.OnBoxFound(hitBox);
-            _npcCharacterController.SetMoveTarget(hitBox.point);
+            _npcController.SetMoveTarget(hitBox.point);
             _stateMachine.TryChangeState(StateName.WalkToBox);
         }
     

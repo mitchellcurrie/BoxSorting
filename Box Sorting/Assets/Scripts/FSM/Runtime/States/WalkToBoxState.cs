@@ -5,13 +5,13 @@ namespace FSM.Runtime.States
         public override void OnEnter()
         { 
             base.OnEnter();
-            _npcCharacterController.MoveToTarget();
+            _npcController.MoveToTarget();
         }
 
         public override void OnExit()
         {
             base.OnExit();
-            _npcCharacterController.StopWalkAnimation();
+            _npcController.StopWalkAnimation();
         }
     }
 }
