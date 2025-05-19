@@ -6,4 +6,3 @@ namespace Box.Data
         Red
     }
 }
-

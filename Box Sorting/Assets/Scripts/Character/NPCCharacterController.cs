@@ -64,6 +64,40 @@ namespace Character
         {
             InitStateMachine();
         }
+        
+        private void Update()
+        {
+            _stateMachine.Update(Time.deltaTime);
+
+            if (_flagCollision)
+            {
+                CheckFlagCollisionTimer();
+            }
+        }
+        
+        private void FixedUpdate()
+        {
+            if (_currentState != StateName.WalkToBox && _currentState != StateName.WalkWithBox)
+            {
+                return;
+            }
+        
+            // Check if the NPC has reached the target point, which should only happen if the target box has despawned.
+            // This prevents them from getting stuck
+            if (Mathf.Abs(transform.position.x - _targetPosition.x) < _stuckDistance)
+            {
+                _stateMachine.TryChangeState(StateName.SearchForBoxes);
+            }
+
+            // For when a carried box despawns
+            if (_currentState == StateName.WalkWithBox && !_collidedBox.gameObject.activeInHierarchy)
+            {
+                _stateMachine.TryChangeState(StateName.SearchForBoxes);
+            }
+        
+            transform.position = Vector2.MoveTowards(transform.position, _targetPosition, 
+                Time.fixedDeltaTime * _movementSpeed);
+        }
     
         private void InitStateMachine()
         {
@@ -82,17 +116,7 @@ namespace Character
         
             _stateMachine.ForceChangeState(_defaultState.Name);
         }
-
-        private void Update()
-        {
-            _stateMachine.Update(Time.deltaTime);
-
-            if (_flagCollision)
-            {
-                CheckFlagCollisionTimer();
-            }
-        }
-
+        
         private void CheckFlagCollisionTimer()
         {
             // Regular checks if the character is at the flag. This is for situations when the character acquires a box
@@ -105,31 +129,7 @@ namespace Character
                 _flagCollisionStayTimer = 0;
             }
         }
-
-        private void FixedUpdate()
-        {
-            if (_currentState != StateName.WalkToBox && _currentState != StateName.WalkWithBox)
-            {
-                return;
-            }
         
-            // Check if the NPC has reached the target point, which should only happen if the target box has despawned
-            // This prevents them from getting stuck
-            if (Mathf.Abs(transform.position.x - _targetPosition.x) < _stuckDistance)
-            {
-                _stateMachine.TryChangeState(StateName.SearchForBoxes);
-            }
-
-            // For when a carried box despawns
-            if (_currentState == StateName.WalkWithBox && !_collidedBox.gameObject.activeInHierarchy)
-            {
-                _stateMachine.TryChangeState(StateName.SearchForBoxes);
-            }
-        
-            transform.position = Vector2.MoveTowards(transform.position, _targetPosition, 
-                Time.deltaTime * _movementSpeed);
-        }
-
         public void SetMoveTarget(Vector2 targetPosition)
         {
             _targetPosition = new Vector2(targetPosition.x, 0); // Always keep character at Y position 0

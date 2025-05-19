@@ -10,6 +10,12 @@ namespace FSM.Runtime.States
             base.OnEnter();
             _npcCharacterController.MoveToTarget();
         }
+
+        public override void OnExit()
+        {
+            base.OnExit();
+            _npcCharacterController.StopAllMovingAnimations();
+        }
     
         protected override void OnBoxFound(RaycastHit2D hitBox)
         {

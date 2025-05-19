@@ -51,7 +51,7 @@ namespace Box.Runtime
         
         public void OnPickedUp()
         {
-            // Stop the effects of gravity, any existing velocity, and prevent character raycasts colliding
+            // Stop the effects of gravity, any existing velocity, and prevents character raycasts colliding
             _rigidbody.bodyType = RigidbodyType2D.Kinematic;
             _rigidbody.linearVelocity = Vector2.zero;
             _rigidbody.angularVelocity = 0f;
@@ -117,6 +117,8 @@ namespace Box.Runtime
             }
         
             _renderer.color = new Color(_colour.r, _colour.g, _colour.b, 0);
+            
+            // Set inactive so the object spawner can use it again
             gameObject.SetActive(false);
         }
     }
