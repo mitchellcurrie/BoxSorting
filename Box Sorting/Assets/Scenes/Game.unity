@@ -3126,8 +3126,8 @@ MonoBehaviour:
   - {fileID: 9215810635223859336, guid: 7b1462e2124ac0f4c9ef26c25bb4eb96, type: 3}
   - {fileID: 5823776310032496960, guid: adb688a3566572d47a560c9030dc3e8a, type: 3}
   _maximumNumberOfObjects: 20
-  _spawnRateSeconds: 2.5
-  _randomMaxForce: 100
+  _spawnRateMinMaxSeconds: {x: 1, y: 3.5}
+  _randomMaxForce: 85
 --- !u!4 &2036822746
 Transform:
   m_ObjectHideFlags: 0
