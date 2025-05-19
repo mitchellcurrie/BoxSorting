@@ -151,12 +151,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _movementSpeed: 2
+  _stuckDistance: 0.1
   _dropBoxForce: 300
   _throwBoxForce: 400
   _dropBoxAngleDegrees: 60
   _throwBoxAngleDegrees: 70
   _blockingBoxDistance: 3
-  _stuckDistance: 0.1
+  _flagCollisionChecksPerSecond: 5
   _defaultState: {fileID: 2765726473741457763}
   _states:
   - {fileID: 2765726473741457763}
@@ -168,6 +169,7 @@ MonoBehaviour:
   _onStateChanged:
     m_PersistentCalls:
       m_Calls: []
+  _showStateChangeLogs: 0
   _blueBoxParent: {fileID: 4403688482774174168}
   _redBoxParent: {fileID: 113618541707192350}
   _blueFlag: {fileID: 0}

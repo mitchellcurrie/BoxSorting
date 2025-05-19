@@ -9,6 +9,7 @@ namespace Box.Runtime
     public class BoxController : MonoBehaviour
     {
         [field: SerializeField] public BoxColour Colour { get; private set; }
+        
         [SerializeField] private int _rotationMaxForce = 30;
         [SerializeField] private int _timeUntilFade = 5;
         [SerializeField] private float _fadeDuration = 2;
@@ -47,6 +48,7 @@ namespace Box.Runtime
             gameObject.layer = LayerMask.NameToLayer(IGNORE_RAYCAST_LAYER);
             _rigidbody.AddTorque(Random.Range(-_rotationMaxForce, _rotationMaxForce));
             _rigidbody.AddForce(releaseForce);
+            
             StartCoroutine(DelayedSetLayerToDefault());
         }
     
@@ -56,6 +58,7 @@ namespace Box.Runtime
             {
                 gameObject.layer = LayerMask.NameToLayer(IGNORE_RAYCAST_LAYER);
                 _inTargetZone = true;
+                
                 StartCoroutine(DelayedDespawnRoutine());
             }
         
@@ -81,10 +84,12 @@ namespace Box.Runtime
       
             var timer = 0f;
 
+            // Fade sprite alpha to 0 over time
             while (timer < _fadeDuration)
             {
                 var alpha = Mathf.Lerp(1f, 0f, timer / _fadeDuration);
                 _renderer.color = new Color(_colour.r, _colour.g, _colour.b, alpha);
+                
                 timer += Time.deltaTime;
                 yield return null;
             }

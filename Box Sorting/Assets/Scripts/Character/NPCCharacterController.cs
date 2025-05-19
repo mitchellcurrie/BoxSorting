@@ -3,6 +3,7 @@ using Box.Runtime;
 using FSM.Data;
 using FSM.Runtime;
 using FSM.Runtime.States;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -17,19 +18,20 @@ namespace Character
 
         [Header("Settings")] 
         [SerializeField] private float _movementSpeed = 2;
+        [SerializeField] private float _stuckDistance = 0.1f;
         [SerializeField] private int _dropBoxForce = 300;
         [SerializeField] private int _throwBoxForce = 400;
         [SerializeField] private int _dropBoxAngleDegrees = 45;
         [SerializeField] private int _throwBoxAngleDegrees = 60;
         [SerializeField] private float _blockingBoxDistance = 2f;
-        [SerializeField] private float _stuckDistance = 0.1f;
+        [SerializeField] private float _flagCollisionChecksPerSecond = 5f;
     
         [Header("State Machine")]
         [SerializeField] private State _defaultState;
-        [SerializeField] private State[] _states;
-    
-        [Header("Events")]
-        [SerializeField] UnityEvent<StateName> _onStateChanged;
+        [SerializeField] private State[] _states = Array.Empty<State>();
+
+        [Header("Events")] 
+        [SerializeField] private UnityEvent<StateName> _onStateChanged = new();
     
         [Header("Debug")]
         [SerializeField] private bool _showStateChangeLogs;
@@ -45,8 +47,10 @@ namespace Character
         private Animator _animator;
         private SpriteRenderer _spriteRenderer;
         private bool _movingLeft;
-        private Vector2 _targetPosition;
+        private Vector2 _targetPosition = Vector2.zero;
         private BoxController _collidedBox;
+        private float _flagCollisionStayTimer;
+        private Collider2D _flagCollision;
 
         private void Awake()
         {
@@ -82,6 +86,19 @@ namespace Character
         private void Update()
         {
             _stateMachine.Update(Time.deltaTime);
+
+            if (!_flagCollision)
+            {
+                return;
+            }
+            
+            _flagCollisionStayTimer += Time.deltaTime;
+            
+            if (_flagCollisionStayTimer >= 1 / _flagCollisionChecksPerSecond)
+            {
+                TryChangeStateAtFlag();
+                _flagCollisionStayTimer = 0;
+            }
         }
 
         private void FixedUpdate()
@@ -155,6 +172,12 @@ namespace Character
 
         public void PickUpBox()
         {
+            if (!_collidedBox)
+            {
+                Debug.LogError("Can't pick up box as it is null");
+                return;
+            }
+            
             _collidedBox.transform.SetParent(_collidedBox.Colour == BoxColour.Blue ? _blueBoxParent : _redBoxParent);
             _collidedBox.transform.SetLocalPositionAndRotation(Vector3.zero, _collidedBox.transform.rotation);
         
@@ -177,7 +200,7 @@ namespace Character
         {
             if (!_collidedBox)
             {
-                Debug.LogError("Can't release box as it is null!");
+                Debug.LogError("Can't release box as it is null");
                 return;
             }
         
@@ -210,26 +233,41 @@ namespace Character
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            CheckFlagCollision(other);
+            if (other.gameObject.CompareTag("Flag"))
+            {
+                _flagCollision = other;
+                TryChangeStateAtFlag();
+            }
         }
     
-        private void OnTriggerStay2D(Collider2D other)
+        private void OnTriggerExit2D(Collider2D other)
         {
-            CheckFlagCollision(other);
+            if (other.gameObject.CompareTag("Flag"))
+            {
+                _flagCollision = null;
+            }
         }
 
-        private void CheckFlagCollision(Collider2D other)
+        private void TryChangeStateAtFlag()
         {
-            if (!other.gameObject.CompareTag("Flag") || _currentState != StateName.WalkWithBox)
+            if (_currentState == StateName.WalkWithBox)
             {
-                return;
+                _stateMachine.TryChangeState(StateName.DropBox);
             }
-
-            _stateMachine.TryChangeState(StateName.DropBox);
         }
     
         private void ValidateFields()
         {
+            if (!_defaultState)
+            {
+                Debug.LogError("Default state is not set");
+            }
+            
+            if (_states.Length == 0)
+            {
+                Debug.LogError("State list is empty");
+            }
+            
             if (!_blueBoxParent || !_redBoxParent)
             {
                 Debug.LogError("Held Object Transforms are not set");
