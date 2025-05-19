@@ -47,7 +47,7 @@ namespace Character
         private Animator _animator;
         private SpriteRenderer _spriteRenderer;
         private bool _movingLeft;
-        private Vector2 _targetPosition = Vector2.zero;
+        private Vector2 _targetPosition;
         private BoxController _collidedBox;
         private float _flagCollisionStayTimer;
         private Collider2D _flagCollision;
@@ -140,7 +140,7 @@ namespace Character
         {
             _collidedBox = null;
             _targetPosition = Vector2.zero;
-            _stateMachine.ForceChageState(StateName.SearchForBoxes);
+            _stateMachine.ForceChangeState(StateName.SearchForBoxes);
             transform.position = Vector2.zero;
         }
 

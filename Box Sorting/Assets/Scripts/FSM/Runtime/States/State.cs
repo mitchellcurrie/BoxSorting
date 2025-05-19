@@ -8,6 +8,7 @@ namespace FSM.Runtime.States
     public abstract class State : MonoBehaviour
     {
         [field:SerializeField] public StateName Name { get; private set; }
+        
         [SerializeField] private List<State> _canTransitionFrom = new();
     
         protected StateMachine _stateMachine;
@@ -18,7 +19,7 @@ namespace FSM.Runtime.States
             _stateMachine = stateMachine;
             _npcCharacterController = npcCharacterController;
         }
-
+        
         public virtual bool CanEnter(State currentState)
         {
             return _canTransitionFrom.Contains(currentState);

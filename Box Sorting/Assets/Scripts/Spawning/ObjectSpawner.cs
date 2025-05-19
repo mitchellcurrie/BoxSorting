@@ -14,14 +14,15 @@ namespace Spawning
         [SerializeField] private int _randomMaxForce = 50;
     
         private const string SPAWNED_OBJECTS_PARENT_NAME = "Spawned Objects Parent";
+        
         private readonly List<GameObject> _objectPool = new();
-        private Transform[] _spawnTransforms = Array.Empty<Transform>();
+        private Transform[] _spawnPoints = Array.Empty<Transform>();
         private Transform _spawnedObjectsParent;
         private float _spawnTimer;
 
         private void Start()
         {
-            _spawnTransforms = GetComponentsInChildren<Transform>();
+            _spawnPoints = GetComponentsInChildren<Transform>();
             _spawnedObjectsParent = new GameObject(SPAWNED_OBJECTS_PARENT_NAME).transform;
             _spawnedObjectsParent.SetParent(transform);
             InstantiateObjectPool();
@@ -59,18 +60,18 @@ namespace Spawning
 
             if (!obj)
             {
-                Debug.LogError($"No valid object available in the pool");
+                Debug.Log("No valid object available in the pool to spawn");
                 return;
             }
 
-            var randomSpawnLocation = GetRandomSpawnTransform();
-            obj.transform.SetPositionAndRotation(randomSpawnLocation.position, randomSpawnLocation.rotation);
+            var randomSpawnPoint = GetRandomSpawnPoint();
+            obj.transform.SetPositionAndRotation(randomSpawnPoint.position, randomSpawnPoint.rotation);
             obj.transform.SetParent(_spawnedObjectsParent);
             obj.SetActive(true);
         
             if (obj.TryGetComponent<Rigidbody2D>(out var rigidBody))
             {
-                Vector2 forceDirection = randomSpawnLocation.right;
+                Vector2 forceDirection = randomSpawnPoint.right;
                 var force = Random.Range(0, _randomMaxForce);
                 rigidBody.AddForce(forceDirection * force);
             }
@@ -92,9 +93,9 @@ namespace Spawning
                 .FirstOrDefault(obj => obj && !obj.activeInHierarchy);
         }
 
-        private Transform GetRandomSpawnTransform()
+        private Transform GetRandomSpawnPoint()
         {
-            return _spawnTransforms[Random.Range(0, _spawnTransforms.Length)];
+            return _spawnPoints[Random.Range(0, _spawnPoints.Length)];
         }
     }
 }

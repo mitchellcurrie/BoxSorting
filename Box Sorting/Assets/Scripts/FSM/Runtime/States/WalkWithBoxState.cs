@@ -13,6 +13,8 @@ namespace FSM.Runtime.States
     
         protected override void OnBoxFound(RaycastHit2D hitBox)
         {
+            base.OnBoxFound(hitBox);
+            
             if (_npcCharacterController.IsBoxBlockingTarget(hitBox.point))
             {
                 _stateMachine.TryChangeState(StateName.ThrowBox);

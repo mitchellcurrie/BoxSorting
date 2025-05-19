@@ -11,11 +11,13 @@ namespace FSM.Runtime.States
 
         public override void OnEnter()
         {
+            base.OnEnter();
             _scanDirection = Random.Range(0, 2) == 1 ? Vector2.left : Vector2.right;
         }
 
         public override void OnUpdate(float deltaTime)
         {
+            base.OnUpdate(deltaTime);
             _scanTimer += deltaTime;
         
             if (_scanTimer >= 1 / _scansPerSecond)
@@ -26,11 +28,8 @@ namespace FSM.Runtime.States
             }
         }
 
-        protected virtual void OnBoxFound(RaycastHit2D hitBox)
-        {
+        protected virtual void OnBoxFound(RaycastHit2D hitBox) { }
         
-        }
-    
         private void ScanForBoxes(Vector2 direction)
         {
             var hit = Physics2D.Raycast(transform.position, direction);

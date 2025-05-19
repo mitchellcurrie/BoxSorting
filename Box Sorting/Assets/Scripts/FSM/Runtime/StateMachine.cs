@@ -9,20 +9,17 @@ namespace FSM.Runtime
 {
     public class StateMachine
     {
-        public StateName CurrentState => _currentState.Name; 
-        public StateName PreviousState => _previousState.Name;
         public Action<StateName> OnStateChanged;
     
         private readonly Dictionary<StateName, State> _states = new();
         private readonly NpcCharacterController _npcCharacterController;
+        private readonly bool _showStateChangeLogs;
         private State _currentState;
-        private State _previousState;
-        private bool _showStateChangeLogs;
 
         public StateMachine(NpcCharacterController npcCharacterController, bool showStateChangeLogs)
         {
-            _npcCharacterController = npcCharacterController;
             _showStateChangeLogs = showStateChangeLogs;
+            _npcCharacterController = npcCharacterController;
         }
     
         public void Add(State state)
@@ -44,7 +41,10 @@ namespace FSM.Runtime
     
         public void Update(float deltaTime)
         {
-            _currentState.OnUpdate(deltaTime);
+            if (_currentState)
+            {
+                _currentState.OnUpdate(deltaTime);
+            }
         }
 
         public bool TryChangeState(StateName stateName)
@@ -77,7 +77,7 @@ namespace FSM.Runtime
             return true;
         }
     
-        public void ForceChageState(StateName stateName)
+        public void ForceChangeState(StateName stateName)
         {
             var newState = GetState(stateName);
         
@@ -98,7 +98,6 @@ namespace FSM.Runtime
         private void SetNewState(State newState)
         {
             OnStateChanged?.Invoke(newState.Name);
-            _previousState = _currentState;
             _currentState = newState;
             _currentState.OnEnter();
         }

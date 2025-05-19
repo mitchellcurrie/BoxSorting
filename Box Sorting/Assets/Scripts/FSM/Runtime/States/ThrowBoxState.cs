@@ -10,6 +10,7 @@ namespace FSM.Runtime.States
     
         public override void OnEnter()
         {
+            base.OnEnter();
             _npcCharacterController.ThrowBox();
             StartCoroutine(DelayedChangeState());
         }

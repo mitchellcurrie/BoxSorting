@@ -5,7 +5,7 @@ namespace FSM.Runtime.States
 {
     public class SearchForBoxesState : BoxScanState
     {
-        [SerializeField] private Vector2 _flipLookDirectionMinMaxSeconds = Vector2.zero;
+        [SerializeField] private Vector2 _flipLookDirectionMinMaxSeconds;
 
         private float _flipTimer;
         private float _currentFlipTime;
@@ -20,7 +20,6 @@ namespace FSM.Runtime.States
         public override void OnUpdate(float deltaTime)
         {
             base.OnUpdate(deltaTime);
-        
             _flipTimer += deltaTime;
         
             if (_flipTimer >= _currentFlipTime)
@@ -33,6 +32,7 @@ namespace FSM.Runtime.States
 
         protected override void OnBoxFound(RaycastHit2D hitBox)
         {
+            base.OnBoxFound(hitBox);
             _npcCharacterController.SetMoveTarget(hitBox.point);
             _stateMachine.TryChangeState(StateName.WalkToBox);
         }
