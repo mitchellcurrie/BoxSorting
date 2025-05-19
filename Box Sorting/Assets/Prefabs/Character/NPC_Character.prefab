@@ -169,9 +169,9 @@ MonoBehaviour:
   _onStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  _showStateChangeLogs: 0
-  _blueBoxParent: {fileID: 4403688482774174168}
-  _redBoxParent: {fileID: 113618541707192350}
+  _showDebugStateChangeLogs: 0
+  _blueBoxParent: {fileID: 113618541707192350}
+  _redBoxParent: {fileID: 4403688482774174168}
   _blueFlag: {fileID: 0}
   _redFlag: {fileID: 0}
 --- !u!95 &7166420078085310179
